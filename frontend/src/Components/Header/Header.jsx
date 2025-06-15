@@ -7,6 +7,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { LuGitCompareArrows } from "react-icons/lu";
 import { FaRegHeart } from "react-icons/fa";
 import Tooltip from '@mui/material/Tooltip';
+import Navbar from '../Navbar/Navbar';
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -21,7 +22,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 function Header() {
   return (
-    <header>
+    <header className='bg-white'>
       <div className="top-strip py-2 border-t-[1px] border-gray-500 border-b-[1px]">
         <div className="container">
             <div className="flex items-center justify-between">
@@ -43,17 +44,21 @@ function Header() {
         </div>
       </div>
 
-      <div className="header py-3">
+      <div className="header py-2 border-b-[1px] border-gray-500">
         <div className="container flex items-center justify-between">
             <div className="col1 w-[15%]">
                 <Link to="/"><img src='/logo.png' alt="Logo" /></Link>
             </div>
-            <div className='col2 w-[50%]'><Search /></div>
+
+            <div className='col2 w-[50%]'>
+                <Search />
+            </div>
+
             <div className='col3 w-[30%] flex items-center pl-7'>
                 <ul className='flex items-center justify-end gap-3 w-full'>
                     <li className='list-none'>
-                        <Link to="/login" className="link text-[15px] font-[500] transition">Login</Link> | &nbsp;
-                        <Link to="/register" className="text-[15px] font-[500] link transition ml-3">Register</Link>
+                        <Link to="/login" className="link text-[15px] font-[500] transition mr-1">Login</Link> | &nbsp;
+                        <Link to="/register" className="text-[15px] font-[500] link transition">Register</Link>
                     </li>
                     
                     
@@ -88,6 +93,8 @@ function Header() {
             </div>
         </div>
       </div>
+
+      <Navbar />
     </header>
   );
 }

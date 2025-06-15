@@ -7,8 +7,8 @@ const Search = () => {
       <input
         type="text"
         placeholder="Search for products..."
-        className="w-full h-full bg-transparent pr-12 text-base border-none focus:outline-none focus:ring-0 placeholder-gray-500"
-        />
+        className="w-full h-full bg-transparent text-base border-none focus:outline-none focus:ring-0 placeholder-gray-500"
+      />
 
       <Button 
         className="!absolute right-2 !min-w-0 !p-0 !rounded-full"
