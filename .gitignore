@@ -1,0 +1,55 @@
+# === Node (React + Vite) ===
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.local
+frontend/.DS_Store
+frontend/yarn.lock
+frontend/package-lock.json
+
+# Vite cache
+frontend/.vite-cache/
+
+# Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# === Spring Boot ===
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.env
+backend/.DS_Store
+
+# Maven
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+backend/logs/
+backend/*.log
+
+# IntelliJ / Eclipse / VS Code
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Logs ===
+*.log
+logs/
+*.bak
+*.tmp
+*.old
+
+# === Environment ===
+.env
+*.env.*
