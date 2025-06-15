@@ -7,11 +7,16 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
+      {/* Apply top padding to prevent content being hidden under fixed header */}
+      <div className="">
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </div>
     </BrowserRouter>
-  )
+  );
 }
 
+
 export default App
+

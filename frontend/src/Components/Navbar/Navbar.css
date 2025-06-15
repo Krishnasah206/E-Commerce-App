@@ -1,0 +1,36 @@
+.categoryPanel button {
+  text-transform: capitalize !important;
+}
+
+nav ul button {
+  text-transform: capitalize !important;
+}
+
+nav ul button:hover {
+  background: none !important;
+}
+
+/* Fix submenu appearance */
+.nav li .submenu {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  z-index: 100;
+}
+
+.nav li:hover .submenu {
+  visibility: visible;
+  opacity: 1;
+}
+
+.nav li .submenu button {
+  font-weight: 400 !important;
+}
+
+.nav li .submenu button:hover {
+  color: #ff5252 !important;
+}

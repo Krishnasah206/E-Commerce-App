@@ -11,9 +11,18 @@ body {
   font-optical-sizing: auto;
   background: #f5f0f0;
   color: rgba(0,0,0,0.7);
+  overflow-x: hidden;
 }
 
 .container{width: 90%; margin: auto}
+
+header {
+  position: sticky; /* or fixed */
+  top: 0;
+  z-index: 50; /* Higher than swiper slides */
+  background: white; /* Prevent transparent overlap */
+}
+
 
 /* header .top-strip{border-top: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1);} */
 
@@ -21,4 +30,45 @@ body {
 
 .MuiBadge-badge{background-color: #ff5252 !important;}
 
-nav ul button{text-transform: capitalize !important;}
+.sliderHome{overflow: inherit !important;}
+.swiper-button-next, .swiper-button-prev{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 100%;
+  width: 45px;
+  height: 45px;
+  z-index: 10;
+  min-width: 45px;
+  box-shadow: 0 1px 3px #0000001f, 0 1px 2px #0000003d !important;
+}
+.swiper-button-next:after, .swiper-button-prev:after{
+  font-size: 22px !important;
+  color: #000;
+}
+
+.homeCatSlider{overflow: inherit !important;}
+.homeCatSlider .swiper-button-prev{width: 30px; height: 30px; min-width: 30px;}
+.homeCatSlider .swiper-button-next{width: 30px; height: 30px; min-width: 30px;}
+.homeCatSlider .swiper-button-prev:after, .homeCatSlider .swiper-button-next:after{
+  font-size: 16px !important;
+}
+
+/* .homeCatSlider .swiper-button-prev{
+  left: -10px !important;
+}
+.homeCatSlider .swiper-button-next{
+  right: -10px !important;
+} */
+
+.homeCatSlider .item{border: 1px solid rgba(0,0,0,0.1);}
+
+.homeCatSlider .swiper-button-prev:hover, .homeCatSlider .swiper-button-next:hover{
+  background: #ff5252 !important;
+}
+.homeCatSlider .swiper-button-prev:hover::after, .homeCatSlider .swiper-button-next:hover::after{
+  color: #fff !important;
+}
+
+.homeCatSlider .item:hover img{transform: scale(1.1);}
