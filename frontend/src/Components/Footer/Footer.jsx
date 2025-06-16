@@ -15,31 +15,31 @@ const Footer = () => {
                 <div className="p-4 group">
                 <LiaShippingFastSolid className="text-2xl mx-auto mb-2 transition-all duration-300 transform group-hover:scale-130 group-hover:text-[#ff5252]" />
                 <h3 className="font-bold mb-2">Free Shipping</h3>
-                <p className="text-sm">For all Orders Over $100</p>
+                <p className="text-xs">For all Orders Over $100</p>
                 </div>
 
                 <div className="p-4 group">
                 <PiKeyReturnLight className="text-2xl mx-auto mb-2 transition-all duration-300 transform group-hover:scale-130 group-hover:text-[#ff5252]" />
                 <h3 className="font-bold mb-2">30 Days Returns</h3>
-                <p className="text-sm">For an Exchange Product</p>
+                <p className="text-xs">For an Exchange Product</p>
                 </div>
 
                 <div className="p-4 group">
                 <IoWalletOutline className="text-2xl mx-auto mb-2 transition-all duration-300 transform group-hover:scale-130 group-hover:text-[#ff5252]" />
                 <h3 className="font-bold mb-2">Secured Payment</h3>
-                <p className="text-sm">Payment Cards Accepted</p>
+                <p className="text-xs">Payment Cards Accepted</p>
                 </div>
 
                 <div className="p-4 group">
                 <LiaGiftSolid className="text-2xl mx-auto mb-2 transition-all duration-300 transform group-hover:scale-130 group-hover:text-[#ff5252]" />
                 <h3 className="font-bold mb-2">Special Gifts</h3>
-                <p className="text-sm">Our First Product Order</p>
+                <p className="text-xs">Our First Product Order</p>
                 </div>
 
                 <div className="p-4 group">
                 <BiSupport className="text-2xl mx-auto mb-2 transition-all duration-300 transform group-hover:scale-130 group-hover:text-[#ff5252]" />
                 <h3 className="font-bold mb-2">Support 24/7</h3>
-                <p className="text-sm">Contact us Anytime</p>
+                <p className="text-xs">Contact us Anytime</p>
                 </div>
 
             </div>
@@ -56,26 +56,26 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Contact Column */}
             <div>
-            <h4 className="font-bold text-lg mb-4">Contact us</h4>
+            <h4 className="font-bold text-base mb-4">Contact us</h4>
             <address className="not-italic">
-                <p className="my-2">sales@ourcompany.com</p>
-                <p>(+91) 9999999999</p>
+                <p className="my-2 text-sm">sales@ourcompany.com</p>
+                <p className='text-sm' >(+91) 9999999999</p>
             </address>
             <div className="mt-4">
-                <button className="text-[#ff5252] hover:underline font-medium">
+                <button className="text-[#ff5252] font-medium">
                 Online Chat
                 </button>
-                <p className="text-sm mt-1">Get Expert Help</p>
+                <p className="text-xs mt-1">Get Expert Help</p>
             </div>
             </div>
 
             {/* Products Column with border */}
             <div className="border-l-3 border-gray-200 pl-10">
-            <h4 className="font-bold text-lg mb-4">Products</h4>
-            <ul className="space-y-2">
+            <h4 className="font-bold text-base mb-4">Products</h4>
+            <ul className="space-y-2 text-sm ">
                 {['Prices drop', 'New products', 'Best sales', 'Contact us', 'Sitemap', 'Stores'].map((item) => (
                 <li key={item}>
-                    <a href="#" className="hover:text-[#ff5252] hover:underline">{item}</a>
+                    <a href="#" className="hover:text-[#ff5252]">{item}</a>
                 </li>
                 ))}
             </ul>
@@ -84,11 +84,11 @@ const Footer = () => {
 
           {/* Company Column */}
           <div>
-            <h4 className="font-bold text-lg mb-4">Our company</h4>
-            <ul className="space-y-2">
+            <h4 className="font-bold text-base mb-4">Our company</h4>
+            <ul className="space-y-2 text-sm">
               {['Delivery', 'Legal Notice', 'Terms and conditions of use', 'About us', 'Secure payment', 'Login'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="hover:text-[#ff5252] hover:underline">{item}</a>
+                  <a href="#" className="hover:text-[#ff5252]">{item}</a>
                 </li>
               ))}
             </ul>
@@ -96,8 +96,8 @@ const Footer = () => {
 
           {/* Newsletter Column */}
           <div>
-            <h4 className="font-bold text-lg mb-4">Subscribe to newsletter</h4>
-            <p className="mb-4 text-sm">
+            <h4 className="font-bold text-base mb-4">Subscribe to newsletter</h4>
+            <p className="mb-4 text-xs">
               Subscribe to our latest newsletter to get news about special discounts.
             </p>
             <form className="mb-3">
@@ -120,7 +120,7 @@ const Footer = () => {
                 id="terms" 
                 className="mt-1 mr-2" 
               />
-              <label htmlFor="terms" className="text-sm">
+              <label htmlFor="terms" className="text-xs">
                 I agree to the terms and conditions and the privacy policy
               </label>
             </div>

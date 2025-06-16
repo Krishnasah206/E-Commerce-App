@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import Search from '../Search/Search';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
@@ -9,7 +9,6 @@ import { LuGitCompareArrows } from "react-icons/lu";
 import { FaRegHeart } from "react-icons/fa";
 import Tooltip from '@mui/material/Tooltip';
 import Navbar from '../Navbar/Navbar';
-
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -25,8 +24,7 @@ function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsSticky(scrollTop > 30);
+      setIsSticky(window.scrollY > 40);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -35,9 +33,13 @@ function Header() {
 
   return (
     <>
-      <header className="bg-white w-full z-50">
-        {/* Top strip scrolls normally */}
-        <div className="top-strip py-2 border-t border-b border-gray-500 bg-white">
+      <header className="w-full z-50">
+        {/* Top Strip - disappears on scroll */}
+        <div
+          className={`top-strip py-2 border-t border-b border-gray-500 bg-white transition-all duration-500 ease-in-out ${
+            isSticky ? 'opacity-0 -translate-y-full h-0 overflow-hidden' : 'opacity-100 translate-y-0'
+          }`}
+        >
           <div className="container flex items-center justify-between">
             <p className="text-sm font-medium w-1/2">
               Get up to 50% off new season styles, limited time only
@@ -49,8 +51,12 @@ function Header() {
           </div>
         </div>
 
-        {/* Sticky middle + navbar */}
-        <div className={`w-full bg-white transition-all duration-300 ease-in-out ${isSticky ? 'fixed top-0 shadow-md animate-fade' : 'relative'}`}>
+        {/* Sticky Middle Header & Navbar */}
+        <div
+          className={`w-full bg-white transition-all duration-300 ease-in-out ${
+            isSticky ? 'fixed top-0 shadow-md animate-fade' : 'relative'
+          }`}
+        >
           {/* Middle Section */}
           <div className="py-2 border-b border-gray-500">
             <div className="container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -72,17 +78,29 @@ function Header() {
                   </li>
                   <li>
                     <Tooltip title="Wishlist">
-                      <IconButton><StyledBadge badgeContent={4} color="secondary"><FaRegHeart /></StyledBadge></IconButton>
+                      <IconButton>
+                        <StyledBadge badgeContent={4} color="secondary">
+                          <FaRegHeart />
+                        </StyledBadge>
+                      </IconButton>
                     </Tooltip>
                   </li>
                   <li>
                     <Tooltip title="Compare">
-                      <IconButton><StyledBadge badgeContent={5} color="secondary"><LuGitCompareArrows /></StyledBadge></IconButton>
+                      <IconButton>
+                        <StyledBadge badgeContent={5} color="secondary">
+                          <LuGitCompareArrows />
+                        </StyledBadge>
+                      </IconButton>
                     </Tooltip>
                   </li>
                   <li>
                     <Tooltip title="Cart">
-                      <IconButton><StyledBadge badgeContent={4} color="secondary"><MdOutlineShoppingCart /></StyledBadge></IconButton>
+                      <IconButton>
+                        <StyledBadge badgeContent={4} color="secondary">
+                          <MdOutlineShoppingCart />
+                        </StyledBadge>
+                      </IconButton>
                     </Tooltip>
                   </li>
                 </ul>
@@ -94,14 +112,11 @@ function Header() {
           <Navbar />
         </div>
 
-
-        {/* Layout placeholder to prevent jump */}
-        <div style={{ height: isSticky ? '112px' : '0px' }}></div>
+        {/* Spacer to prevent layout shift */}
+        <div style={{ height: isSticky ? '100px' : '0px' }}></div>
       </header>
     </>
   );
 }
-
-
 
 export default Header;
