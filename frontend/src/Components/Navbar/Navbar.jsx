@@ -18,7 +18,7 @@ function Navbar() {
   return (
     <>
     <nav className='py-2'>
-        <div className="container flex items-center justify-end gap-8">
+        <div className="container flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-8">
             <div className="col1 w-[20%]">
                 <Button className='!text-black gap-2 w-full' onClick={openCatPanel}>
                     <FaBarsStaggered className="text-[18px]" />
@@ -27,7 +27,7 @@ function Navbar() {
                 </Button>
             </div>
 
-            <div className="col_2 w-[60%] relative">
+            <div className="col_2 w-[60%] relative hidden md:block">
                 <ul className='nav flex items-center gap-3'>
                     <li className='list-none'>
                         <Link to="/" className='link transition text-[14px] font-[500]' >

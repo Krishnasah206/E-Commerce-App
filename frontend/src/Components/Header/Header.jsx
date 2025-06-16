@@ -37,7 +37,7 @@ function Header() {
     <>
       <header className="bg-white w-full z-50">
         {/* Top strip scrolls normally */}
-        <div className="top-strip py-2 border-t border-b border-gray-500">
+        <div className="top-strip py-2 border-t border-b border-gray-500 bg-white">
           <div className="container flex items-center justify-between">
             <p className="text-sm font-medium w-1/2">
               Get up to 50% off new season styles, limited time only
@@ -50,25 +50,25 @@ function Header() {
         </div>
 
         {/* Sticky middle + navbar */}
-        <div
-          className={`w-full bg-white transition-all duration-300 ease-in-out ${
-            isSticky ? 'fixed top-0 shadow-md animate-fade' : 'relative'
-          }`}
-        >
-          {/* Middle */}
+        <div className={`w-full bg-white transition-all duration-300 ease-in-out ${isSticky ? 'fixed top-0 shadow-md animate-fade' : 'relative'}`}>
+          {/* Middle Section */}
           <div className="py-2 border-b border-gray-500">
-            <div className="container flex items-center justify-between">
-              <div className="w-[15%]">
-                <Link to="/"><img src="/logo.png" alt="Logo" /></Link>
+            <div className="container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              {/* Logo */}
+              <div className="w-full sm:w-[15%] flex justify-center sm:justify-start">
+                <Link to="/"><img src="/logo.png" alt="Logo" className="h-10" /></Link>
               </div>
-              <div className="w-[50%]">
+
+              {/* Search */}
+              <div className="w-full sm:w-[50%] px-4 sm:px-0">
                 <Search />
               </div>
-              <div className="w-[30%] flex items-center pl-7">
-                <ul className="flex items-center justify-end gap-3 w-full">
-                  <li>
-                    <Link to="/login" className="text-sm font-medium link mr-1">Login</Link> | &nbsp;
-                    <Link to="/register" className="text-sm font-medium link">Register</Link>
+
+              {/* User Actions */}
+              <div className="w-full sm:w-[30%] flex justify-center sm:justify-end items-center">
+                <ul className="flex flex-wrap justify-center sm:justify-end items-center gap-3">
+                  <li className="text-sm font-medium link">
+                    <Link to="/login" className="mr-1">Login</Link> | <Link to="/register">Register</Link>
                   </li>
                   <li>
                     <Tooltip title="Wishlist">
@@ -93,6 +93,7 @@ function Header() {
           {/* Navbar */}
           <Navbar />
         </div>
+
 
         {/* Layout placeholder to prevent jump */}
         <div style={{ height: isSticky ? '112px' : '0px' }}></div>

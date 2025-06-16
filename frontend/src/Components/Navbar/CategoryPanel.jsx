@@ -20,13 +20,14 @@ const CategoryPanel = (props) => {
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" className="categoryPanel">
-      <h3 className="p-3 text-[16px] font-[500] flex items-center justify-between">
+      <h3 className="p-4 text-[18px] font-semibold text-gray-800 border-b flex items-center justify-between">
         Shop By Categories
         <IoCloseSharp
           onClick={toggleDrawer(false)}
-          className="cursor-pointer text-[20px]"
+          className="cursor-pointer text-[22px] text-gray-600 hover:text-red-500 transition"
         />
       </h3>
+
 
       <div className="scroll">
         <ul className="w-full">
@@ -35,7 +36,7 @@ const CategoryPanel = (props) => {
             <div className="relative">
               <Link to="/" className='w-full'>
                 <Button
-                  className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]"
+                  className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all "
                   onClick={toggleFashion}
                 >
                   Fashion
@@ -59,21 +60,21 @@ const CategoryPanel = (props) => {
                 
                 <li className="list-none relative">
                   <Link to="/" className='w-full'>
-                    <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.7)]">
+                    <Button className="w-full !text-left !justify-start !px-6 !py-2 !text-[14px] !text-gray-600 hover:!bg-gray-50 transition">
                       Men
                     </Button>
                   </Link>
                 </li>
                 <li className="list-none relative">
                     <Link to="/" className='w-full'>
-                  <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.7)]">
+                  <Button className="w-full !text-left !justify-start !px-6 !py-2 !text-[14px] !text-gray-600 hover:!bg-gray-50 transition">
                     Women
                   </Button>
                   </Link>
                 </li>
                 <li className="list-none relative">
                   <Link to="/" className='w-full'>
-                  <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.7)]">
+                  <Button className="w-full !text-left !justify-start !px-6 !py-2 !text-[14px] !text-gray-600 hover:!bg-gray-50 transition">
                     Children
                   </Button>
                   </Link>
@@ -85,49 +86,49 @@ const CategoryPanel = (props) => {
           {/* Other categories manually written */}
           <li className="list-none relative">
             <Link>
-            <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+            <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
               Electronics
             </Button>
             </Link>
           </li>
           <li className="list-none relative">
             <Link to="/" className='w-full'>
-              <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+              <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
                 Bags
               </Button>
             </Link>
           </li>
           <li className="list-none relative">
             <Link to="/" className='w-full'>
-              <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+              <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
                 Footwear
               </Button>
             </Link>
           </li>
           <li className="list-none relative">
             <Link to="/" className='w-full'>
-              <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+              <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
                 Groceries
               </Button>
             </Link>
           </li>
           <li className="list-none relative">
             <Link to="/" className='w-full'>
-              <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+              <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
                 Beauty
               </Button>
             </Link>
           </li>
           <li className="list-none relative">
             <Link to="/" className='w-full'>
-              <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+              <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
                 Wellness
               </Button>
             </Link>
           </li>
           <li className="list-none relative">
             <Link to="/" className='w-full'>
-              <Button className="w-full !text-left !justify-start !px-3 !text-[rgba(0,0,0,0.8)]">
+              <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
                 Jewellery
               </Button>
             </Link>

@@ -11,11 +11,11 @@ function HomeSlider() {
       <div className="container">
         <Swiper
           spaceBetween={30}
-          // loop={true}
-          // autoplay={{
-          //   delay: 3000, // slide every 3 seconds
-          //   disableOnInteraction: false, // continues autoplay even after user interacts
-          // }}
+          loop={true}
+          autoplay={{
+            delay: 3000, // slide every 3 seconds
+            disableOnInteraction: false, // continues autoplay even after user interacts
+          }}
           navigation={true}
           modules={[Navigation, Autoplay]}
           className="sliderHome"
