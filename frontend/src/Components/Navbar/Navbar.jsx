@@ -35,7 +35,7 @@ function Navbar() {
                         </Link>
                     </li>
                     <li className='list-none relative group'>
-                        <Link to="/" className='link transition text-[14px] font-[500]' >
+                        <Link to="/productListing" className='link transition text-[14px] font-[500]' >
                             <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] '>Fashion</Button>
                         </Link>
 
@@ -43,21 +43,21 @@ function Navbar() {
                         <div className="submenu absolute top-[100%] left-[0%] min-w-[200px] bg-white shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 ">
                             <ul>
                                 <li className="list-none w-full">
-                                    <Link to="/" className='w-full' >
+                                    <Link to="/productListing" className='w-full' >
                                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
                                             Men
                                         </Button>
                                     </Link>
                                 </li>
                                 <li className="list-none w-full">
-                                    <Link to="/" className='w-full'>
+                                    <Link to="/productListing" className='w-full'>
                                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
                                             Women
                                         </Button>
                                     </Link>
                                 </li>
                                 <li className="list-none w-full">
-                                    <Link to="/" className='w-full'>
+                                    <Link to="/productListing" className='w-full'>
                                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
                                             Children
                                         </Button>
@@ -67,37 +67,37 @@ function Navbar() {
                         </div>
                     </li>
                     <li className='list-none'>
-                        <Link to="/" className='link transition text-[14px] font-[500]' >
+                        <Link to="/productListing" className='link transition text-[14px] font-[500]' >
                             <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] '>Electronics</Button>
                         </Link>
                     </li>
                     <li className='list-none'>
-                        <Link to="/" className='link transition text-[14px] font-[500]' >
+                        <Link to="/productListing" className='link transition text-[14px] font-[500]' >
                             <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] '>Bags</Button>
                         </Link>
                     </li>
                     <li className='list-none'>
-                        <Link to="/" className='link transition text-[14px] font-[500]' >
+                        <Link to="/productListing" className='link transition text-[14px] font-[500]' >
                             <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] '>Footwear</Button>
                         </Link>
                     </li>
                     <li className='list-none'>
-                        <Link to="/" className='link transition text-[14px] font-[500]' >
+                        <Link to="/productListing" className='link transition text-[14px] font-[500]' >
                             <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] '>Groceries</Button>
                         </Link>
                     </li>
                     <li className='list-none'>
-                        <Link to="/" className='link transition text-[14px] font-[500]' >
+                        <Link to="/productListing" className='link transition text-[14px] font-[500]' >
                             <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] '>Beauty</Button>
                         </Link>
                     </li>
                     <li className='list-none'>
-                        <Link to="/" className='link transition text-[14px] font-[500]' >
+                        <Link to="/productListing" className='link transition text-[14px] font-[500]' >
                             <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] '>Wellness</Button>
                         </Link>
                     </li>
                     <li className='list-none'>
-                        <Link to="/" className='link transition text-[14px] font-[500]' >
+                        <Link to="/productListing" className='link transition text-[14px] font-[500]' >
                             <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] '>Jewellery</Button>
                         </Link>
                     </li>

@@ -162,3 +162,13 @@ header .sticky-header {
   transform: scale(1.02);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
+
+
+.MuiCheckbox-root {
+  padding: 6px !important;
+}
+
+.MuiCheckbox-root.Mui-checked {
+  color: #ff5252 !important;
+}
+

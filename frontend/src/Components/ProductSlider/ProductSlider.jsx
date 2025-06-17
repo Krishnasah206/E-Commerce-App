@@ -13,53 +13,20 @@ import 'swiper/css/navigation';
 
 function ProductSlider() {
   return (
-    <div className='productSlider' >
+    <div className='productSlider overflow-hidden' >
       <Swiper
-        breakpoints={{
-            320: { slidesPerView: 2 },
-            640: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 },
-            1280: { slidesPerView: 6 }
-        }}
+        slidesPerView="auto"
         spaceBetween={10}
-        navigation={true}
+        navigation
         pagination={{ clickable: true }}
         modules={[Navigation]}
         className="mySwiper"
       >
-
-
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide >
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
-        <SwiperSlide className="!w-auto">
-            <ProductItem />
-        </SwiperSlide>
+        {[...Array(10)].map((_, idx) => (
+            <SwiperSlide key={idx} className="!w-auto">
+                <ProductItem />
+            </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

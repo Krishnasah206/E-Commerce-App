@@ -9,6 +9,7 @@ import { LuGitCompareArrows } from "react-icons/lu";
 import { FaRegHeart } from "react-icons/fa";
 import Tooltip from '@mui/material/Tooltip';
 import Navbar from '../Navbar/Navbar';
+import CartContainer from '../Cart/CartContainer';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -21,6 +22,22 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 function Header() {
   const [isSticky, setIsSticky] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([
+    {
+      name: 'Apple iPhone 15 (Blue)',
+      quantity: 2,
+      price: 45999,
+      image: 'https://serviceapi.spicezgold.com/download/1742446875533_app3.jpeg',
+    },
+  ]);
+
+  const toggleCart = (open) => () => setCartOpen(open);
+
+  const handleRemoveItem = (index) => {
+    const updatedItems = cartItems.filter((_, i) => i !== index);
+    setCartItems(updatedItems);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,12 +51,10 @@ function Header() {
   return (
     <>
       <header className="w-full z-50">
-        {/* Top Strip - disappears on scroll */}
-        <div
-          className={`top-strip py-2 border-t border-b border-gray-500 bg-white transition-all duration-500 ease-in-out ${
-            isSticky ? 'opacity-0 -translate-y-full h-0 overflow-hidden' : 'opacity-100 translate-y-0'
-          }`}
-        >
+        {/* Top Strip */}
+        <div className={`top-strip py-2 border-t border-b border-gray-500 bg-white transition-all duration-500 ease-in-out ${
+          isSticky ? 'opacity-0 -translate-y-full h-0 overflow-hidden' : 'opacity-100 translate-y-0'
+        }`}>
           <div className="container flex items-center justify-between">
             <p className="text-sm font-medium w-1/2">
               Get up to 50% off new season styles, limited time only
@@ -52,12 +67,9 @@ function Header() {
         </div>
 
         {/* Sticky Middle Header & Navbar */}
-        <div
-          className={`w-full bg-white transition-all duration-300 ease-in-out ${
-            isSticky ? 'fixed top-0 shadow-md animate-fade' : 'relative'
-          }`}
-        >
-          {/* Middle Section */}
+        <div className={`w-full bg-white transition-all duration-300 ease-in-out ${
+          isSticky ? 'fixed top-0 shadow-md animate-fade' : 'relative'
+        }`}>
           <div className="py-2 border-b border-gray-500">
             <div className="container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               {/* Logo */}
@@ -70,9 +82,9 @@ function Header() {
                 <Search />
               </div>
 
-              {/* User Actions */}
+              {/* Icons */}
               <div className="w-full sm:w-[30%] flex justify-center sm:justify-end items-center">
-                <ul className="flex flex-wrap justify-center sm:justify-end items-center gap-3">
+                <ul className="flex items-center gap-3">
                   <li className="text-sm font-medium link">
                     <Link to="/login" className="mr-1">Login</Link> | <Link to="/register">Register</Link>
                   </li>
@@ -96,8 +108,8 @@ function Header() {
                   </li>
                   <li>
                     <Tooltip title="Cart">
-                      <IconButton>
-                        <StyledBadge badgeContent={4} color="secondary">
+                      <IconButton onClick={toggleCart(true)}>
+                        <StyledBadge badgeContent={cartItems.length} color="secondary">
                           <MdOutlineShoppingCart />
                         </StyledBadge>
                       </IconButton>
@@ -108,12 +120,19 @@ function Header() {
             </div>
           </div>
 
-          {/* Navbar */}
           <Navbar />
         </div>
 
-        {/* Spacer to prevent layout shift */}
+        {/* Spacer */}
         <div style={{ height: isSticky ? '100px' : '0px' }}></div>
+
+        {/* Cart Drawer */}
+        <CartContainer
+          open={cartOpen}
+          toggleDrawer={toggleCart}
+          cartItems={cartItems}
+          onRemoveItem={handleRemoveItem}
+        />
       </header>
     </>
   );
