@@ -55,7 +55,7 @@ function ProductListing() {
           <Link underline="hover" color="inherit" href="/" className='transition text-[14px] font-medium text-gray-700 hover:text-black'>
             Home
           </Link>
-          <Link underline="hover" color="inherit" href="/" className='transition text-[14px] font-medium text-gray-700 hover:text-black'>
+          <Link underline="hover" color="inherit" href="/productListing" className='transition text-[14px] font-medium text-gray-700 hover:text-black'>
             Fashion
           </Link>
         </Breadcrumbs>
