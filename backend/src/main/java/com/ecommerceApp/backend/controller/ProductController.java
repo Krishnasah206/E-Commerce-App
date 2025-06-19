@@ -1,5 +1,6 @@
 package com.ecommerceApp.backend.controller;
 
+import com.ecommerceApp.backend.dto.ProductDTO;
 import com.ecommerceApp.backend.entity.Product;
 import com.ecommerceApp.backend.repository.ProductRepository;
 import com.ecommerceApp.backend.service.ProductService;
@@ -53,9 +54,27 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable ObjectId id) {
-        return productRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
+        Product product = productRepository.findById(new ObjectId(id))
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        ProductDTO dto = convertToDTO(product);
+        return ResponseEntity.ok(dto);
+    }
+
+    private ProductDTO convertToDTO(Product product) {
+        return ProductDTO.builder()
+                .id(product.getId().toHexString())
+                .productName(product.getProductName())
+                .brand(product.getBrand())
+                .category(product.getCategory())
+                .subCategory(product.getSubCategory())
+                .rating(product.getRating())
+                .reviews(product.getReviews())
+                .mrp(product.getMrp())
+                .discount(product.getDiscount())
+                .stock(product.getStock())
+                .description(product.getDescription())
+                .images(product.getImages())
+                .build();
     }
 }

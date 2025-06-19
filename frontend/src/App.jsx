@@ -4,7 +4,7 @@ import Header from './Components/Header/Header';
 import Home from './Components/Home/Home';
 import Footer from './Components/Footer/Footer';
 import ProductListing from './Components/ProductListing/ProductListing';
-import ProductDetails from './Components/ProductDetails/ProductDetails';
+import ProductDetailsWrapper from './Components/ProductDetailsWrapper/ProductDetailsWrapper';
 
 function App() {
 
@@ -12,10 +12,10 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/productListing" element={<ProductListing />}/>
-          <Route path="/productDetails" element={<ProductDetails />}/>
-        </Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/productListing/:category" element={<ProductListing />} />
+        <Route path="/product/:id" element={<ProductDetailsWrapper />} />
+      </Routes>
       <Footer />
     </BrowserRouter>
   );

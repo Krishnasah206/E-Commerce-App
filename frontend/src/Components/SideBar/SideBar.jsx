@@ -12,35 +12,49 @@ import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css'; // Ensure you have this CSS file imported
 
 
-function SideBar() {
+function SideBar({ selectedCategories, onCategoryChange }) {
     const [isOpenCategoryFilter, setIsOpenCategoryFilter] = React.useState(true);
     const [isOpenAvailabilityFilter, setIsOpenAvailabilityFilter] = React.useState(true);
     const [isOpenRatingFilter, setIsOpenRatingFilter] = React.useState(true);
+
+    const categories = [
+    "Fashion", "Electronics", "Bags", "Footwear",
+    "Groceries", "Beauty", "Wellness", "Jewellery"
+  ];
+
+  const handleCategoryChange = (event) => {
+    const { checked, name } = event.target;
+    onCategoryChange(name, checked);
+  };
+
+
   return (
     <aside className="sidebar py-5">
-        {/* <CategoryCollapse /> */}
-        <div className="box">
-            <div className="mb-3 text-[16px] font-[600] flex items-center pr-5">
-                <span>Shop by Category</span>
-                <Button className='!w-[30px] !h-[30px] !min-w-[30px] !rounded-full !ml-auto !text-[#000] ' onClick={() => setIsOpenCategoryFilter(!isOpenCategoryFilter)} size="small">
-                    {isOpenCategoryFilter ? <FaAngleDown /> : <FaAngleUp />}
-                </Button>
-            </div>
-            <Collapse isOpened={isOpenCategoryFilter}>
-                <div className="scroll px-3 relative -left-[10px]">
-                    <FormGroup>
-                        <FormControlLabel control={<Checkbox size='small' />} label="Fashion" className='w-full' />
-                        <FormControlLabel control={<Checkbox size='small' />} label="Electronics" className='w-full' />
-                        <FormControlLabel control={<Checkbox size='small' />} label="Bags" className='w-full' />
-                        <FormControlLabel control={<Checkbox size='small' />} label="Footwear" className='w-full' />
-                        <FormControlLabel control={<Checkbox size='small' />} label="Groceries" className='w-full' />
-                        <FormControlLabel control={<Checkbox size='small' />} label="Beauty" className='w-full' />
-                        <FormControlLabel control={<Checkbox size='small' />} label="Wellness" className='w-full' />
-                        <FormControlLabel control={<Checkbox size='small' />} label="Jewellery" className='w-full' />
-                    </FormGroup>
-                </div>
-            </Collapse>
-        </div>
+        {/* Shop by Category */}
+      <div className="box">
+        {/* ...title and collapse logic... */}
+        <Collapse isOpened={isOpenCategoryFilter}>
+          <div className="scroll px-3 relative -left-[10px]">
+            <FormGroup>
+              {categories.map(cat => (
+                <FormControlLabel
+                  key={cat}
+                  control={
+                    <Checkbox
+                      size="small"
+                      name={cat}
+                      checked={selectedCategories.includes(cat)}
+                      onChange={handleCategoryChange}
+                    />
+                  }
+                  label={cat}
+                  className="w-full"
+                />
+              ))}
+            </FormGroup>
+          </div>
+        </Collapse>
+      </div>
 
             {/* Availability Filter */}
         <div className="box mt-3">

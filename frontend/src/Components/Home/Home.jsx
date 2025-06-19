@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HomeSlider from '../Slider/HomeSlider';
 import CatelogSlider from '../Slider/CatelogSlider';
 import { LiaShippingFastSolid } from "react-icons/lia";
@@ -12,18 +12,28 @@ import BlogSlider from '../BlogSlider/BlogSlider';
 import HomeBanner from '../HomeBanner/HomeBanner';
 import HomePart2 from '../HomeBanner/HomePart2';
 
+import axios from 'axios';
+
 function Home() {
   const [value, setValue] = React.useState(0);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/journal/api/products') // Replace with your actual API endpoint
+      .then(res => setProducts(res.data))
+      .catch(err => console.error('Error fetching products:', err));
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  // Example filters by category, adjust according to your product data structure
+  const filterByCategory = (category) =>
+    products.filter((product) => product.category === category);
 
   return (
     <>
-      
-
       <div className='relative  z-10'>
         <HomeSlider />
       </div>
@@ -61,7 +71,17 @@ function Home() {
             </div>
           </div>
 
-          <ProductSlider />
+          {/* Show products filtered by selected tab */}
+          <ProductSlider products={
+            value === 0 ? filterByCategory('Fashion') :
+            value === 1 ? filterByCategory('Electronics') :
+            value === 2 ? filterByCategory('Bag') :
+            value === 3 ? filterByCategory('Footwear') :
+            value === 4 ? filterByCategory('Groceries') :
+            value === 5 ? filterByCategory('Beauty') :
+            value === 6 ? filterByCategory('Wellness') :
+            value === 7 ? filterByCategory('Jewellery') : []
+          } />
         </div>
       </section>
 
@@ -167,8 +187,12 @@ function Home() {
           <BlogSlider />
         </div>
       </section>
+
+      {/* The rest of your Home component stays the same */}
+      {/* You can reuse the same approach to pass filtered products to other ProductSlider instances */}
     </>
   );
 }
 
 export default Home;
+

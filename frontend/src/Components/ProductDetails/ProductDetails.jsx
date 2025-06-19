@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { FaAngleDown, FaAngleUp, FaRegHeart, FaHeart } from 'react-icons/fa';
 import { LuGitCompareArrows } from 'react-icons/lu';
 import Rating from '@mui/material/Rating';
@@ -8,32 +9,40 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-function ProductDetails() {
-  const images = [
-    "https://serviceapi.spicezgold.com/download/1742444094460_aqualite-mens-black-grey-slider-product-images-rvlx7wvjex-0-202305251453.webp",
-    "https://serviceapi.spicezgold.com/download/1742444094460_aqualite-mens-black-grey-slider-product-images-rvlx7wvjex-1-202305251453.jpg",
-    "https://serviceapi.spicezgold.com/download/1742444094460_aqualite-mens-black-grey-slider-product-images-rvlx7wvjex-1-202305251453.jpg",
-    "https://serviceapi.spicezgold.com/download/1742444094460_aqualite-mens-black-grey-slider-product-images-rvlx7wvjex-1-202305251453.jpg"
-  ];
-
-  const [mainImage, setMainImage] = useState(images[0]);
+function ProductDetails({ id }) {
+  const [product, setProduct] = useState(null);
+  const [mainImage, setMainImage] = useState('');
   const [wishlist, setWishlist] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
+  const [quantity, setQuantity] = useState(1);
 
-  const [quantity, setQuantity] = React.useState(1);
+  useEffect(() => {
+    axios.get(`http://localhost:8080/journal/api/products/${id}`)
+      .then((res) => {
+        setProduct(res.data);
+        setMainImage(res.data.images?.[0]);
+      })
+      .catch((err) => console.error('Error fetching product:', err));
+  }, [id]);
 
   const handleChange = (event) => {
     setQuantity(event.target.value);
   };
 
+  if (!product) return <div className="p-6 text-gray-500">Loading product details...</div>;
+
+  const discountedPrice = (product.mrp - (product.mrp * product.discount / 100)).toFixed(2);
+
+  
+
   return (
     <section className="productDetails bg-white">
       <div className="container mx-auto py-8">
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Left - Image List and Main Image */}
+          {/* Left - Images */}
           <div className="w-full md:w-1/2 flex flex-row">
             <div className="imageList mb-4 flex flex-col gap-3">
-              {images.map((img, idx) => (
+              {product.images.map((img, idx) => (
                 <img
                   key={idx}
                   src={img}
@@ -48,31 +57,26 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* Right - Product Info */}
+          {/* Right - Info */}
           <div className="w-full pt-[90px] md:w-1/2">
-            <h2 className="text-2xl font-semibold mb-2">
-              Aqualite Black & Grey Slip-Resistance Sliders for Men
-            </h2>
+            <h2 className="text-2xl font-semibold mb-2">{product.productName}</h2>
 
             <p className="text-md text-gray-600 mb-1 flex items-center gap-2">
-              Brands: <span className="text-black font-medium">Aqualite</span>
-              <Rating name="size-small" defaultValue={5} size="small" readOnly />
-              <span className="text-gray-500">(5 reviews)</span>
+              Brands: <span className="text-black font-medium">{product.brand}</span>
+              <Rating name="size-small" value={product.rating} size="small" readOnly />
+              <span className="text-gray-500">({product.reviews?.length || 0} reviews)</span>
             </p>
 
             <div className="flex items-center mb-3">
-              <span className="line-through text-gray-500 mr-2">₹2050</span>
-              <span className="text-red-600 font-bold text-xl">₹1850</span>
-              <span className="ml-4 text-green-600 font-medium">Available In Stock: <span className="font-bold">42 Items</span></span>
+              <span className="line-through text-gray-500 mr-2">₹{product.mrp}</span>
+              <span className="text-red-600 font-bold text-xl">₹{discountedPrice}</span>
+              <span className="ml-4 text-green-600 font-medium">Available In Stock: <span className="font-bold">{product.stock} Items</span></span>
             </div>
 
-            <p className="text-gray-600 mb-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus ipsa saepe tempora culpa ipsum dolore dolor temporibus libero dolorem, nemo architecto at vel iusto impedit beatae eveniet excepturi ducimus laudantium explicabo sit ea repudiandae id. Totam quas fugit reprehenderit obcaecati. Repudiandae velit animi iusto tempore ipsa sunt eos nobis perferendis?
-            </p>
+            <p className="text-gray-600 mb-4">{product.description}</p>
 
             <p className="text-sm text-gray-900 mb-3">Free Shipping (Est. Delivery Time 2-3 Days)</p>
 
-            {/* Quantity Selector with Add to Cart */}
             <div className="flex items-center hover:border-[#ff5252] gap-4 mb-4">
               <FormControl sx={{ minWidth: 100 }} size="small">
                 <InputLabel id="quantity-label">Quantity</InputLabel>
@@ -93,8 +97,6 @@ function ProductDetails() {
               </button>
             </div>
 
-
-            {/* Wishlist & Compare */}
             <div className="flex gap-6 text-sm">
               <button
                 onClick={() => setWishlist(!wishlist)}
@@ -111,7 +113,7 @@ function ProductDetails() {
       </div>
 
       {/* Description & Reviews Tabs */}
-      <div className="description pl-[100px] pr-[100px] bg-white pt-4 px-4">
+      <div className="description px-[100px] bg-white pt-4">
         <div className="flex gap-4 mb-2">
           <button
             onClick={() => setActiveTab('description')}
@@ -123,20 +125,17 @@ function ProductDetails() {
             onClick={() => setActiveTab('reviews')}
             className={`font-semibold ${activeTab === 'reviews' ? 'text-red-500' : 'text-gray-500'}`}
           >
-            Reviews (3)
+            Reviews ({product.reviews?.length || 0})
           </button>
         </div>
 
         {activeTab === 'description' ? (
-          <p className="bg-white p-5 rounded-xl shadow-md text-gray-700">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisquam repellendus, magni, molestiae doloremque
-            pariatur architecto quas libero deserunt, tenetur optio sit maiores nisi esse!
-          </p>
+          <p className="bg-white p-5 rounded-xl shadow-md text-gray-700">{product.description}</p>
         ) : (
-          <div className="p-4 shadow rounded text-gray-600">
-            <p>⭐️⭐️⭐️⭐️⭐️ - "Excellent Product!"</p>
-            <p>⭐️⭐️⭐️⭐️ - "Very comfortable and stylish."</p>
-            <p>⭐️⭐️⭐️ - "Decent quality for the price."</p>
+          <div className="p-4 shadow rounded text-gray-600 space-y-2">
+            {product.reviews?.map((review, index) => (
+              <p key={index}>⭐️ {review.rating} - "{review.comment}"</p>
+            ))}
           </div>
         )}
       </div>

@@ -15,28 +15,44 @@ function ProductListing() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemView, setItemView] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const open = Boolean(anchorEl);
+
+  const itemsPerPage = 16;
+
+  // Simulated product list with categories
+  const allItems = new Array(40).fill(null).map((_, index) => ({
+    id: index + 1,
+    category: index % 2 === 0 ? 'Fashion' : 'Electronics'
+  }));
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const itemsPerPage = 16;
-
-  // Simulated product list (40 items for demo)
-  const allItems = new Array(40).fill(null).map((_, index) => index + 1);
-
-  const totalPages = Math.ceil(allItems.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedItems = allItems.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const handleCategoryChange = (category, isChecked) => {
+    setSelectedCategories((prev) =>
+      isChecked ? [...prev, category] : prev.filter((c) => c !== category)
+    );
+    setCurrentPage(1); // Reset to page 1 on filter change
+  };
+
+  const filteredItems = allItems.filter(item =>
+    selectedCategories.length === 0 || selectedCategories.includes(item.category)
+  );
+
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedItems = filteredItems.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <section className="product-listing py-5">
@@ -61,24 +77,23 @@ function ProductListing() {
         </Breadcrumbs>
       </div>
 
-
       <div className="bg-white p-2">
         <div className="container flex gap-3">
-
-          {/* SideBar */}
+          {/* Sidebar */}
           <div className="sidebarWrapper w-[20%] h-fit sticky top-4 self-start">
-            <SideBar />
+            <SideBar
+              selectedCategories={selectedCategories}
+              onCategoryChange={handleCategoryChange}
+            />
           </div>
 
-          {/* Product Listing */}
+          {/* Product Grid */}
           <div className="rightContent w-[80%] py-3">
             <div className="bg-[#f1f1f1] p-2 w-full mb-3 rounded-md flex items-center justify-between">
               <div className="col1 flex items-center gap-2">
                 <Button
                   className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${
-                    itemView === 'list'
-                      ? '!bg-[#ff5252] !text-white'
-                      : '!text-[#000]'
+                    itemView === 'list' ? '!bg-[#ff5252] !text-white' : '!text-[#000]'
                   }`}
                   onClick={() => setItemView('list')}
                 >
@@ -86,16 +101,14 @@ function ProductListing() {
                 </Button>
                 <Button
                   className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${
-                    itemView === 'grid'
-                      ? '!bg-[#ff5252] !text-white'
-                      : '!text-[#000]'
+                    itemView === 'grid' ? '!bg-[#ff5252] !text-white' : '!text-[#000]'
                   }`}
                   onClick={() => setItemView('grid')}
                 >
                   <IoGridSharp />
                 </Button>
                 <span className='text-[rgba(0,0,0,0.7)] text-[14px] font-[500] pl-3'>
-                  There are {allItems.length} products.
+                  {filteredItems.length} products found
                 </span>
               </div>
 
@@ -130,14 +143,14 @@ function ProductListing() {
               </div>
             </div>
 
-            {/* Product Items */}
             <div className={`grid ${itemView === 'grid' ? 'grid-cols-4 md:grid-cols-4 sm:grid-cols-2 gap-4' : 'grid-cols-1 gap-3'}`}>
-              {paginatedItems.map((item, index) =>
-                itemView === 'grid' ? <ProductItem key={index} /> : <ProductItemListView key={index} />
+              {paginatedItems.map((item) =>
+                itemView === 'grid'
+                  ? <ProductItem key={item.id} />
+                  : <ProductItemListView key={item.id} />
               )}
             </div>
 
-            {/* Pagination */}
             <div className="mt-6 flex justify-center">
               <Pagination
                 count={totalPages}
@@ -166,4 +179,3 @@ function ProductListing() {
 }
 
 export default ProductListing;
-
