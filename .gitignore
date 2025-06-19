@@ -23,6 +23,7 @@ backend/.project
 backend/.settings/
 backend/.env
 backend/.DS_Store
+backend/*.yml
 
 # Maven
 backend/pom.xml.tag

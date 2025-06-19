@@ -67,7 +67,7 @@ function ProductDetails() {
             </div>
 
             <p className="text-gray-600 mb-4">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempora deleniti nemo necessitatibus alias. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo ipsa porro a veniam, similique voluptatem et sint officia amet voluptas?
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus ipsa saepe tempora culpa ipsum dolore dolor temporibus libero dolorem, nemo architecto at vel iusto impedit beatae eveniet excepturi ducimus laudantium explicabo sit ea repudiandae id. Totam quas fugit reprehenderit obcaecati. Repudiandae velit animi iusto tempore ipsa sunt eos nobis perferendis?
             </p>
 
             <p className="text-sm text-gray-900 mb-3">Free Shipping (Est. Delivery Time 2-3 Days)</p>

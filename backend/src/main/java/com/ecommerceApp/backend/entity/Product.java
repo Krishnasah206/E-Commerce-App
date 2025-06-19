@@ -32,6 +32,7 @@ public class Product {
 
     private String subCategory;
 
+    @NonNull
     private Double rating;
 
     private List<Review> reviews;
