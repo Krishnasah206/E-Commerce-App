@@ -9,4 +9,7 @@ public interface ProductService {
     List<Product> getProductsByCategory(String category);
     List<Product> getProductsByCategoryAndSubCategory(String category, String subCategory);
     long countProductsByCategory(String category);
+
+    // ✅ NEW: Filter products by multiple categories
+    List<Product> getProductsByMultipleCategories(List<String> categories);
 }

@@ -18,7 +18,7 @@ function SideBar({ selectedCategories, onCategoryChange }) {
     const [isOpenRatingFilter, setIsOpenRatingFilter] = React.useState(true);
 
     const categories = [
-    "Fashion", "Electronics", "Bags", "Footwear",
+    "Fashion", "Electronics", "Bag", "Footwear",
     "Groceries", "Beauty", "Wellness", "Jewellery"
   ];
 

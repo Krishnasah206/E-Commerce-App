@@ -13,10 +13,9 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/products/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/**").permitAll() // allow all
                 )
-                .csrf(csrf -> csrf.disable()); // updated csrf config
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }

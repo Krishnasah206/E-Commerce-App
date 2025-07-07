@@ -1,45 +1,30 @@
+// src/components/BlogSlider/BlogSlider.jsx
 import React from 'react';
 import BlogItem from '../BlogItem/BlogItem';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
-
-import { Pagination } from 'swiper/modules';
-
-import { Link } from 'react-router-dom';
+import { Navigation } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-function BlogSlider() {
+function BlogSlider({ blogs = [] }) {
   return (
     <div>
       <Swiper
-              breakpoints={{
-                  320: { slidesPerView: 2 },
-                  640: { slidesPerView: 3 },
-                  1024: { slidesPerView: 4 }
-              }}
-              spaceBetween={10}
-              navigation={true}
-              pagination={{ clickable: true }}
-              modules={[Navigation]}
-              className="mySwiper"
-        >
-                <SwiperSlide className="!w-auto">
-                    <BlogItem />
-                </SwiperSlide>
-                <SwiperSlide className="!w-auto">
-                    <BlogItem />
-                </SwiperSlide>
-                <SwiperSlide className="!w-auto">
-                    <BlogItem />
-                </SwiperSlide>
-                <SwiperSlide className="!w-auto">
-                    <BlogItem />
-                </SwiperSlide>
-            
-        </Swiper>
+        breakpoints={{
+          320: { slidesPerView: 1.2 },
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: 3.2 }
+        }}
+        spaceBetween={10}
+        className="mySwiper"
+      >
+        {blogs.map((blog) => (
+          <SwiperSlide key={blog.id} className="!w-auto">
+            <BlogItem blog={blog} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 }

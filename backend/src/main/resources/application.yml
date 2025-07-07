@@ -1,9 +1,7 @@
-#spring.application.name=ecommerce
-
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://Krishnasah2060:Avengers0602@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://Krishnasah2060:mdGRIuUIXCPoqI4M@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: ecommerce
       auto-index-creation: true
 

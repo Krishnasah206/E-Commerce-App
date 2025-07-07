@@ -19,21 +19,24 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173/")
 public class ProductController {
 
+    private final ProductService productService;
+
     @Autowired
     private ProductRepository productRepository;
 
-    private final ProductService productService;
-
+    // ✅ Get all products
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    // ✅ Get products by a single category
     @GetMapping("/category/{category}")
     public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String category) {
         return ResponseEntity.ok(productService.getProductsByCategory(category));
     }
 
+    // ✅ Get products by category and subcategory
     @GetMapping("/category/{category}/sub/{subCategory}")
     public ResponseEntity<List<Product>> getProductsByCategoryAndSubCategory(
             @PathVariable String category,
@@ -41,11 +44,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByCategoryAndSubCategory(category, subCategory));
     }
 
+    // ✅ Count products by category
     @GetMapping("/count/{category}")
     public ResponseEntity<Long> countProductsByCategory(@PathVariable String category) {
         return ResponseEntity.ok(productService.countProductsByCategory(category));
     }
 
+    // ✅ Add a new product (Admin only)
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
@@ -53,14 +58,22 @@ public class ProductController {
         return ResponseEntity.ok(saved);
     }
 
+    // ✅ Get product by ID and convert to DTO
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
         Product product = productRepository.findById(new ObjectId(id))
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        ProductDTO dto = convertToDTO(product);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(convertToDTO(product));
     }
 
+    // ✅ 🔥 Multi-category filter using query params
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> getProductsByMultipleCategories(
+            @RequestParam List<String> categories) {
+        return ResponseEntity.ok(productService.getProductsByMultipleCategories(categories));
+    }
+
+    // 👉 Private helper to convert Entity to DTO
     private ProductDTO convertToDTO(Product product) {
         return ProductDTO.builder()
                 .id(product.getId().toHexString())

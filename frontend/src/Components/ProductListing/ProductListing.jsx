@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import SideBar from '../SideBar/SideBar';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
@@ -10,21 +11,52 @@ import { IoGridSharp } from 'react-icons/io5';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ProductItemListView from '../ProductItemListView/ProductItemListView';
+import axios from 'axios';
 
 function ProductListing() {
+  const location = useLocation();
+  const defaultCategory = location.state?.category || null;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemView, setItemView] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(
+    defaultCategory ? [defaultCategory] : []
+  );
+  const [allItems, setAllItems] = useState([]);
+  const [sortOption, setSortOption] = useState('name-asc');
   const open = Boolean(anchorEl);
-
   const itemsPerPage = 16;
 
-  // Simulated product list with categories
-  const allItems = new Array(40).fill(null).map((_, index) => ({
-    id: index + 1,
-    category: index % 2 === 0 ? 'Fashion' : 'Electronics'
-  }));
+  useEffect(() => {
+    const fetchFiltered = async () => {
+      try {
+        let url = 'http://localhost:8080/journal/api/products/filter';
+
+        const response = await axios.get(url, {
+          params: {
+            categories: selectedCategories, // axios will send categories=Fashion&categories=Electronics
+          },
+          paramsSerializer: (params) => {
+            return params.categories.map(cat => `categories=${encodeURIComponent(cat)}`).join('&');
+          }
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        setAllItems(response.data);
+      } catch (error) {
+        console.error('Error fetching filtered products:', error);
+      }
+    };
+
+    if (selectedCategories.length > 0) {
+      fetchFiltered();
+    } else {
+      setAllItems([]); // Optionally clear when none selected
+    }
+  }, [selectedCategories]);
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -40,26 +72,39 @@ function ProductListing() {
   };
 
   const handleCategoryChange = (category, isChecked) => {
-    setSelectedCategories((prev) =>
-      isChecked ? [...prev, category] : prev.filter((c) => c !== category)
+    setSelectedCategories(prev =>
+      isChecked ? [...prev, category] : prev.filter(c => c !== category)
     );
     setCurrentPage(1); // Reset to page 1 on filter change
   };
 
-  const filteredItems = allItems.filter(item =>
-    selectedCategories.length === 0 || selectedCategories.includes(item.category)
-  );
-
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const totalPages = Math.ceil(allItems.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedItems = filteredItems.slice(startIndex, startIndex + itemsPerPage);
+  
+  const sortedItems = [...allItems].sort((a, b) => {
+    switch (sortOption) {
+      case 'name-asc':
+        return a.productName.localeCompare(b.productName);
+      case 'name-desc':
+        return b.productName.localeCompare(a.productName);
+      case 'price-asc':
+        return (a.mrp - a.mrp * (a.discount / 100)) - (b.mrp - b.mrp * (b.discount / 100));
+      case 'price-desc':
+        return (b.mrp - b.mrp * (b.discount / 100)) - (a.mrp - a.mrp * (a.discount / 100));
+      default:
+        return 0;
+    }
+  });
+
+  const paginatedItems = sortedItems.slice(startIndex, startIndex + itemsPerPage);
+
 
   return (
     <section className="product-listing py-5">
       <div className="container py-2">
-        <Breadcrumbs 
-          aria-label="breadcrumb" 
-          separator="|" 
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          separator="|"
           sx={{
             '& .MuiBreadcrumbs-separator': {
               mx: 1,
@@ -79,7 +124,6 @@ function ProductListing() {
 
       <div className="bg-white p-2">
         <div className="container flex gap-3">
-          {/* Sidebar */}
           <div className="sidebarWrapper w-[20%] h-fit sticky top-4 self-start">
             <SideBar
               selectedCategories={selectedCategories}
@@ -87,28 +131,23 @@ function ProductListing() {
             />
           </div>
 
-          {/* Product Grid */}
           <div className="rightContent w-[80%] py-3">
             <div className="bg-[#f1f1f1] p-2 w-full mb-3 rounded-md flex items-center justify-between">
               <div className="col1 flex items-center gap-2">
                 <Button
-                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${
-                    itemView === 'list' ? '!bg-[#ff5252] !text-white' : '!text-[#000]'
-                  }`}
+                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${itemView === 'list' ? '!bg-[#ff5252] !text-white' : '!text-[#000]'}`}
                   onClick={() => setItemView('list')}
                 >
                   <LuMenu />
                 </Button>
                 <Button
-                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${
-                    itemView === 'grid' ? '!bg-[#ff5252] !text-white' : '!text-[#000]'
-                  }`}
+                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${itemView === 'grid' ? '!bg-[#ff5252] !text-white' : '!text-[#000]'}`}
                   onClick={() => setItemView('grid')}
                 >
                   <IoGridSharp />
                 </Button>
                 <span className='text-[rgba(0,0,0,0.7)] text-[14px] font-[500] pl-3'>
-                  {filteredItems.length} products found
+                  {allItems.length} products found
                 </span>
               </div>
 
@@ -122,7 +161,15 @@ function ProductListing() {
                   onClick={handleClick}
                   className='!bg-white !text-[12px] !text-[#000] !capitalize !border !border-[#000]'
                 >
-                  Name, A to Z
+                  {(() => {
+                    switch (sortOption) {
+                      case 'name-asc': return 'Name, A to Z';
+                      case 'name-desc': return 'Name, Z to A';
+                      case 'price-asc': return 'Price, low to high';
+                      case 'price-desc': return 'Price, high to low';
+                      default: return 'Sort';
+                    }
+                  })()}
                 </Button>
                 <Menu
                   id="basic-menu"
@@ -135,20 +182,43 @@ function ProductListing() {
                     },
                   }}
                 >
-                  <MenuItem onClick={handleClose} className='!text-[13px] !text-[#000]'>Name, A to Z</MenuItem>
-                  <MenuItem onClick={handleClose} className='!text-[13px] !text-[#000]'>Name, Z to A</MenuItem>
-                  <MenuItem onClick={handleClose} className='!text-[13px] !text-[#000]'>Price, low to high</MenuItem>
-                  <MenuItem onClick={handleClose} className='!text-[13px] !text-[#000]'>Price, high to low</MenuItem>
+                  <MenuItem
+                    onClick={() => { setSortOption('name-asc'); handleClose(); }}
+                    className='!text-[13px] !text-[#000]'
+                  >
+                    Name, A to Z
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => { setSortOption('name-desc'); handleClose(); }}
+                    className='!text-[13px] !text-[#000]'
+                  >
+                    Name, Z to A
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => { setSortOption('price-asc'); handleClose(); }}
+                    className='!text-[13px] !text-[#000]'
+                  >
+                    Price, low to high
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => { setSortOption('price-desc'); handleClose(); }}
+                    className='!text-[13px] !text-[#000]'
+                  >
+                    Price, high to low
+                  </MenuItem>
+
                 </Menu>
               </div>
             </div>
 
             <div className={`grid ${itemView === 'grid' ? 'grid-cols-4 md:grid-cols-4 sm:grid-cols-2 gap-4' : 'grid-cols-1 gap-3'}`}>
-              {paginatedItems.map((item) =>
-                itemView === 'grid'
-                  ? <ProductItem key={item.id} />
-                  : <ProductItemListView key={item.id} />
-              )}
+              {paginatedItems.map((item) => {
+                console.log("Rendering item:", item);
+                return itemView === 'grid'
+                  ? <ProductItem key={item.id || item._id} product={item} />
+                  : <ProductItemListView key={item.id || item._id} product={item} />
+              })}
+
             </div>
 
             <div className="mt-6 flex justify-center">
@@ -158,16 +228,18 @@ function ProductListing() {
                 onChange={handlePageChange}
                 sx={{
                   '& .MuiPaginationItem-root': {
-                    color: '#ff5252',
-                    borderColor: '#ff5252',
+                    color: '#ff5252',               // Unselected number & arrows
                   },
-                  '& .Mui-selected': {
-                    backgroundColor: '#ff5252',
-                    color: '#fff',
-                    '&:hover': {
-                      backgroundColor: '#e64545',
-                    },
+                  '& .MuiPaginationItem-root.Mui-selected': {
+                    backgroundColor: '#ff5252',     // Red background for selected
+                    color: '#fff',                  // White number
                   },
+                  '& .MuiPaginationItem-root.Mui-selected:hover': {
+                    backgroundColor: '#e64545',     // Hover effect
+                  },
+                  '& .MuiPaginationItem-icon': {
+                    color: '#ff5252',               // Arrow icons
+                  }
                 }}
               />
             </div>

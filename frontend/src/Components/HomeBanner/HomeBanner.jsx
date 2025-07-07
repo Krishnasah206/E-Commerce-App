@@ -17,7 +17,6 @@ export default function HomeBanner() {
         disableOnInteraction: false,
       }}
       navigation={true}
-      pagination={{ clickable: true }}
       modules={[Autoplay, EffectFade, Navigation, Pagination]}
       className="mySwiper"
     >

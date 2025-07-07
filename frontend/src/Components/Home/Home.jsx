@@ -17,6 +17,7 @@ import axios from 'axios';
 function Home() {
   const [value, setValue] = React.useState(0);
   const [products, setProducts] = useState([]);
+  const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:8080/journal/api/products') // Replace with your actual API endpoint
@@ -24,13 +25,32 @@ function Home() {
       .catch(err => console.error('Error fetching products:', err));
   }, []);
 
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/journal/api/blogs')
+      .then(res => setBlogs(res.data))
+      .catch(err => console.error('Error fetching blogs:', err));
+  }, []);
+
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  // Example filters by category, adjust according to your product data structure
-  const filterByCategory = (category) =>
-    products.filter((product) => product.category === category);
+  function getRandomProducts(allProducts, count) {
+    const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
+
+  function filterByCategory(allProducts, categoryName) {
+    return allProducts.filter(
+      (product) =>
+        product.category &&
+        product.category.toLowerCase() === categoryName.toLowerCase()
+    );
+  }
+
+
 
   return (
     <>
@@ -73,15 +93,16 @@ function Home() {
 
           {/* Show products filtered by selected tab */}
           <ProductSlider products={
-            value === 0 ? filterByCategory('Fashion') :
-            value === 1 ? filterByCategory('Electronics') :
-            value === 2 ? filterByCategory('Bag') :
-            value === 3 ? filterByCategory('Footwear') :
-            value === 4 ? filterByCategory('Groceries') :
-            value === 5 ? filterByCategory('Beauty') :
-            value === 6 ? filterByCategory('Wellness') :
-            value === 7 ? filterByCategory('Jewellery') : []
+            value === 0 ? filterByCategory(products, 'Fashion') :
+            value === 1 ? filterByCategory(products, 'Electronics') :
+            value === 2 ? filterByCategory(products, 'Bag') :
+            value === 3 ? filterByCategory(products, 'Footwear') :
+            value === 4 ? filterByCategory(products, 'Groceries') :
+            value === 5 ? filterByCategory(products, 'Beauty') :
+            value === 6 ? filterByCategory(products, 'Wellness') :
+            value === 7 ? filterByCategory(products, 'Jewellery') : []
           } />
+
         </div>
       </section>
 
@@ -130,26 +151,34 @@ function Home() {
           <div className="flex items-center justify-between gap-4">
             <div className="leftSec w-[40%]">
               <h2 className="text-[20px] font-[600]">Latest Products</h2>
+              <p className="text-[14px] font-medium">
+                Check out our newest arrivals, updated daily!
+              </p>
             </div>
           </div>
 
-          <ProductSlider />
+          <ProductSlider products={getRandomProducts(products, 10)} />
         </div>
       </section>
+
 
       <section className="bg-white py-8">
         <div className="container">
           <div className="flex items-center justify-between gap-4">
             <div className="leftSec w-[40%]">
               <h2 className="text-[20px] font-[600]">Featured Products</h2>
+              <p className="text-[14px] font-medium">
+                Handpicked products just for you.
+              </p>
             </div>
           </div>
 
-          <ProductSlider />
+          <ProductSlider products={getRandomProducts(products, 10)} />
         </div>
 
         <AdsBannerSlider items={4} />
       </section>
+
 
 
       <section className="bg-white py-8">
@@ -157,24 +186,32 @@ function Home() {
           <div className="flex items-center justify-between gap-4">
             <div className="leftSec w-[40%]">
               <h2 className="text-[20px] font-[600]">Bags</h2>
+              <p className="text-[14px] font-medium">
+                Discover trendy and functional bags for every occasion.
+              </p>
             </div>
           </div>
 
-          <ProductSlider />
+          <ProductSlider products={filterByCategory(products, 'Bag')} />
         </div>
       </section>
+
 
       <section className="bg-white py-8">
         <div className="container">
           <div className="flex items-center justify-between gap-4">
             <div className="leftSec w-[40%]">
               <h2 className="text-[20px] font-[600]">Wellness</h2>
+              <p className="text-[14px] font-medium">
+                Shop wellness essentials for a healthier lifestyle.
+              </p>
             </div>
           </div>
 
-          <ProductSlider />
+          <ProductSlider products={filterByCategory(products, 'Wellness')} />
         </div>
       </section>
+
 
       <section className="bg-white py-8">
         <div className="container">
@@ -184,9 +221,10 @@ function Home() {
             </div>
           </div>
 
-          <BlogSlider />
+          <BlogSlider blogs={blogs} />
         </div>
       </section>
+
 
       {/* The rest of your Home component stays the same */}
       {/* You can reuse the same approach to pass filtered products to other ProductSlider instances */}

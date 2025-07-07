@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+
     private final ProductRepository productRepository;
 
     @Override
@@ -30,5 +31,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public long countProductsByCategory(String category) {
         return productRepository.countByCategory(category);
+    }
+
+    @Override
+    public List<Product> getProductsByMultipleCategories(List<String> categories) {
+        return productRepository.findByCategoryInIgnoreCase(categories);
     }
 }

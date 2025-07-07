@@ -15,7 +15,7 @@ function ProductSlider({ products = [] }) {
         spaceBetween={10}
         navigation
         pagination={{ clickable: true }}
-        modules={[Navigation, Autoplay, Pagination]}
+        modules={[Navigation, Autoplay]}
         className="mySwiper"
       >
         {products.map((product, idx) => (
