@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -12,6 +13,9 @@ const Cart = ({ anchor = 'right', open, toggleDrawer, cartItems = [], onRemoveIt
   const getTotal = () => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
+
+const navigate = useNavigate();
+
 
   return (
     <Drawer anchor={anchor} open={open} onClose={toggleDrawer(false)}>
@@ -39,14 +43,20 @@ const Cart = ({ anchor = 'right', open, toggleDrawer, cartItems = [], onRemoveIt
             <Typography variant="body1" color="text.secondary">Your cart is empty.</Typography>
           ) : (
             cartItems.map((item, index) => (
-              <Box key={index} sx={{ display: 'flex', mb: 2 }}>
-                <img src={item.image} alt={item.name} style={{ width: 60, height: 60, borderRadius: 8 }} />
+              <Box key={item.id || index} sx={{ display: 'flex', mb: 2 }}>
+                <img
+                  src={item.image}
+                  alt={item.productName}
+                  style={{ width: 60, height: 60, borderRadius: 8 }}
+                />
                 <Box sx={{ ml: 2, flex: 1 }}>
-                  <Typography variant="body1" noWrap>{item.name}</Typography>
+                  <Typography variant="body1" noWrap>{item.productName}</Typography>
                   <Typography variant="body2" color="text.secondary">Qty: {item.quantity}</Typography>
-                  <Typography variant="body2" color="error">₹{item.price.toLocaleString()}</Typography>
+                  <Typography variant="body2" color="error">
+                    ₹{(item.price * item.quantity).toFixed(2)}
+                  </Typography>
                 </Box>
-                <IconButton onClick={() => onRemoveItem(index)}>
+                <IconButton onClick={() => onRemoveItem(item.id)}>
                   <MdOutlineDeleteOutline size={20} />
                 </IconButton>
               </Box>
@@ -56,15 +66,23 @@ const Cart = ({ anchor = 'right', open, toggleDrawer, cartItems = [], onRemoveIt
 
         {/* Fixed Bottom Section */}
         <Box sx={{ p: 2, borderTop: '1px solid #ccc' }}>
-          {/* Total */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
             <Typography variant="body1">Total (tax excl.)</Typography>
-            <Typography variant="body1" color="error">₹{getTotal().toLocaleString()}</Typography>
+            <Typography variant="body1" color="error">
+              ₹{getTotal().toFixed(2)}
+            </Typography>
           </Box>
 
-          {/* Buttons */}
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button variant="contained" fullWidth sx={{ bgcolor: '#ff4d4d' }}>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{ bgcolor: '#ff4d4d' }}
+              onClick={() => {
+                toggleDrawer(false)();
+                navigate('/cartListing');
+              }}
+            >
               View Cart
             </Button>
             <Button variant="outlined" fullWidth color="error">
@@ -72,6 +90,7 @@ const Cart = ({ anchor = 'right', open, toggleDrawer, cartItems = [], onRemoveIt
             </Button>
           </Box>
         </Box>
+
       </Box>
     </Drawer>
   );

@@ -49,7 +49,7 @@ function CatelogSlider() {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link to='/productListing' state={{ category: 'Bags' }}>
+                    <Link to='/productListing' state={{ category: 'Bag' }}>
                     <div className="item py-8 px-3 bg-white rounded-sm text-center flex items-center justify-center flex-col">
                         <img src="https://th.bing.com/th/id/OIP.qZaLU-aG-4mKEiX7pbO05QHaHa?r=0&rs=1&pid=ImgDetMain&cb=idpwebp1&o=7&rm=3" alt="Category 1" className="w-[60px] transition-all " />
                         <h3 className="text-[15px] font-[500] mt-3">Bags</h3>

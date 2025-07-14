@@ -5,6 +5,7 @@ import Home from './Components/Home/Home';
 import Footer from './Components/Footer/Footer';
 import ProductListing from './Components/ProductListing/ProductListing';
 import ProductDetailsWrapper from './Components/ProductDetailsWrapper/ProductDetailsWrapper';
+import CartListing from './Components/Cart/CartListing';
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/productListing" element={<ProductListing />} />
         <Route path="/product/:id" element={<ProductDetailsWrapper />} />
+        <Route path="/cartListing" element={<CartListing />} />
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -40,20 +40,29 @@ function ProductDetails({ id }) {
       <div className="container mx-auto py-8">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Left - Images */}
-          <div className="w-full md:w-1/2 flex flex-row">
-            <div className="imageList mb-4 flex flex-col gap-3">
+          <div className="w-full md:w-1/2 flex gap-4 items-start">
+            {/* Thumbnail List */}
+            <div className="flex flex-col gap-3">
               {product.images.map((img, idx) => (
                 <img
                   key={idx}
                   src={img}
                   alt={`thumb-${idx}`}
-                  className={`w-20 h-20 border rounded cursor-pointer ${mainImage === img ? 'opacity-100' : 'opacity-40'}`}
+                  className={`w-20 h-20 object-cover border rounded cursor-pointer ${
+                    mainImage === img ? 'opacity-100 border-2 border-[#ff5252]' : 'opacity-40'
+                  }`}
                   onClick={() => setMainImage(img)}
                 />
               ))}
             </div>
-            <div className="image pl-4 ">
-              <img src={mainImage} alt="Main product" className="w-full max-w-md rounded" />
+
+            {/* Main Image */}
+            <div className="flex-1">
+              <img
+                src={mainImage}
+                alt="Main product"
+                className="w-full h-[700px] object-cover rounded"
+              />
             </div>
           </div>
 
