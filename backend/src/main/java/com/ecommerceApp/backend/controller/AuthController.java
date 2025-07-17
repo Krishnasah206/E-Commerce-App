@@ -1,6 +1,7 @@
 package com.ecommerceApp.backend.controller;
 
 import com.ecommerceApp.backend.dto.AuthRequest;
+import com.ecommerceApp.backend.dto.LoginResponse;
 import com.ecommerceApp.backend.entity.User;
 import com.ecommerceApp.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173/")
 public class AuthController {
 
     private final UserService userService;
@@ -20,8 +22,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest request) {
-        return userService.login(request.getUserName(), request.getPassword());
+    public ResponseEntity<LoginResponse> login(@RequestBody AuthRequest request) {
+        return userService.login(request.getLoginField(), request.getPassword());
     }
 
 }

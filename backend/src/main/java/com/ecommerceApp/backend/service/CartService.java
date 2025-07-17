@@ -20,22 +20,56 @@ public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository; // ✅ add this
 
+//    public List<CartItemDetailsDTO> getCartDetailsByUser(String userId) {
+//        List<Cart> cartItems = cartRepository.findByUserId(userId);
+//        return cartItems.stream().map(item -> {
+//            Product product = productRepository.findById(new ObjectId(item.getProductId()))
+//                    .orElseThrow(() -> new RuntimeException("Product not found"));
+//
+//            return CartItemDetailsDTO.builder()
+//                    .id(item.getId())
+//                    .productId(product.getId().toHexString())
+//                    .productName(product.getProductName())
+//                    .image(product.getImages().isEmpty() ? null : product.getImages().get(0))
+//                    .price(product.getMrp() - product.getMrp() * (product.getDiscount() / 100.0))
+//                    .quantity(item.getQuantity())
+//                    .build();
+//        }).collect(Collectors.toList());
+//    }
+
     public List<CartItemDetailsDTO> getCartDetailsByUser(String userId) {
         List<Cart> cartItems = cartRepository.findByUserId(userId);
+
         return cartItems.stream().map(item -> {
-            Product product = productRepository.findById(new ObjectId(item.getProductId()))
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
+            Product product = fetchProductById(item.getProductId());
 
             return CartItemDetailsDTO.builder()
                     .id(item.getId())
                     .productId(product.getId().toHexString())
                     .productName(product.getProductName())
-                    .image(product.getImages().isEmpty() ? null : product.getImages().get(0))
-                    .price(product.getMrp() - product.getMrp() * (product.getDiscount() / 100.0))
+                    .image(product.getImages() != null && !product.getImages().isEmpty() ? product.getImages().get(0) : null)
+                    .price(calculateDiscountedPrice(product.getMrp(), product.getDiscount()))
                     .quantity(item.getQuantity())
                     .build();
         }).collect(Collectors.toList());
     }
+
+    // Helper method to safely fetch Product by string ID
+    private Product fetchProductById(String productId) {
+        try {
+            ObjectId objectId = new ObjectId(productId);
+            return productRepository.findById(objectId)
+                    .orElseThrow(() -> new RuntimeException("Product not found for ID: " + productId));
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException("Invalid product ID format: " + productId);
+        }
+    }
+
+    // Helper method to calculate discounted price
+    private double calculateDiscountedPrice(double mrp, double discount) {
+        return mrp - (mrp * discount / 100.0);
+    }
+
 
 
     public List<CartDTO> getCartByUser(String userId) {

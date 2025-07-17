@@ -22,12 +22,16 @@ public class User {
     @Indexed(unique = true)
     private String userName;
 
+    @NonNull
     private String email;
+
+    @NonNull
+    private String phoneNumber;
 
     @NonNull
     private String password;
 
     @Builder.Default
-    private Set<String> roles = new HashSet<>(); // ROLE_USER, ROLE_ADMIN
+    private Set<String> roles = new HashSet<>(); // USER, ADMIN
 }
 

@@ -24,19 +24,19 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    // ✅ Get all products
+    // ✅ Public - Get all products
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    // ✅ Get products by a single category
+    // ✅ Public - Get by category
     @GetMapping("/category/{category}")
     public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String category) {
         return ResponseEntity.ok(productService.getProductsByCategory(category));
     }
 
-    // ✅ Get products by category and subcategory
+    // ✅ Public - Get by category + sub-category
     @GetMapping("/category/{category}/sub/{subCategory}")
     public ResponseEntity<List<Product>> getProductsByCategoryAndSubCategory(
             @PathVariable String category,
@@ -44,21 +44,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByCategoryAndSubCategory(category, subCategory));
     }
 
-    // ✅ Count products by category
+    // ✅ Public - Count by category
     @GetMapping("/count/{category}")
     public ResponseEntity<Long> countProductsByCategory(@PathVariable String category) {
         return ResponseEntity.ok(productService.countProductsByCategory(category));
     }
 
-    // ✅ Add a new product (Admin only)
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        Product saved = productRepository.save(product);
-        return ResponseEntity.ok(saved);
-    }
-
-    // ✅ Get product by ID and convert to DTO
+    // ✅ Public - Get product by ID
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
         Product product = productRepository.findById(new ObjectId(id))
@@ -66,14 +58,38 @@ public class ProductController {
         return ResponseEntity.ok(convertToDTO(product));
     }
 
-    // ✅ 🔥 Multi-category filter using query params
+    // ✅ Public - Filter by multiple categories
     @GetMapping("/filter")
     public ResponseEntity<List<Product>> getProductsByMultipleCategories(
             @RequestParam List<String> categories) {
         return ResponseEntity.ok(productService.getProductsByMultipleCategories(categories));
     }
 
-    // 👉 Private helper to convert Entity to DTO
+    // ✅ Admin Only - Add product
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/add")
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+        Product saved = productRepository.save(product);
+        return ResponseEntity.ok(saved);
+    }
+
+    // ✅ Admin Only - Update product
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product product) {
+        product.setId(new ObjectId(id));
+        Product updated = productRepository.save(product);
+        return ResponseEntity.ok(updated);
+    }
+
+    // ✅ Admin Only - Delete product
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
+        productRepository.deleteById(new ObjectId(id));
+        return ResponseEntity.noContent().build();
+    }
+
     private ProductDTO convertToDTO(Product product) {
         return ProductDTO.builder()
                 .id(product.getId().toHexString())
@@ -91,3 +107,4 @@ public class ProductController {
                 .build();
     }
 }
+

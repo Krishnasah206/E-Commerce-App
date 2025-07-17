@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -9,13 +10,40 @@ import Button from '@mui/material/Button';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { BiX } from 'react-icons/bi';
 
-const Cart = ({ anchor = 'right', open, toggleDrawer, cartItems = [], onRemoveItem }) => {
+const Cart = ({ anchor = 'right', open, toggleDrawer }) => {
+  const [cartItems, setCartItems] = useState([]);
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+
+  // Fetch cart items when drawer opens
+  useEffect(() => {
+    if (!userId || !open) return;
+
+    const fetchCart = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/journal/api/cart/details/${userId}`);
+        setCartItems(response.data);
+      } catch (error) {
+        console.error("Failed to fetch cart items:", error);
+      }
+    };
+
+    fetchCart();
+  }, [open, userId]);
+
+  // Remove item from cart
+  const handleRemoveItem = async (productId) => {
+    try {
+      await axios.delete(`http://localhost:8080/journal/api/cart/${userId}/remove/${productId}`);
+      setCartItems(prev => prev.filter(item => item.productId !== productId));
+    } catch (error) {
+      console.error("Failed to remove item:", error);
+    }
+  };
+
   const getTotal = () => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
-
-const navigate = useNavigate();
-
 
   return (
     <Drawer anchor={anchor} open={open} onClose={toggleDrawer(false)}>
@@ -31,13 +59,13 @@ const navigate = useNavigate();
         {/* Header */}
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h6">Shopping Cart ({cartItems.length})</Typography>
-          <IconButton onClick={() => toggleDrawer(false)()}>
+          <IconButton onClick={toggleDrawer(false)}>
             <BiX size={24} />
           </IconButton>
         </Box>
         <Divider />
 
-        {/* Scrollable Items Section */}
+        {/* Cart Items */}
         <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2 }}>
           {cartItems.length === 0 ? (
             <Typography variant="body1" color="text.secondary">Your cart is empty.</Typography>
@@ -50,13 +78,24 @@ const navigate = useNavigate();
                   style={{ width: 60, height: 60, borderRadius: 8 }}
                 />
                 <Box sx={{ ml: 2, flex: 1 }}>
-                  <Typography variant="body1" noWrap>{item.productName}</Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '180px' // adjust width as per layout
+                    }}
+                  >
+                    {item.productName}
+                  </Typography>
+
                   <Typography variant="body2" color="text.secondary">Qty: {item.quantity}</Typography>
                   <Typography variant="body2" color="error">
                     ₹{(item.price * item.quantity).toFixed(2)}
                   </Typography>
                 </Box>
-                <IconButton onClick={() => onRemoveItem(item.id)}>
+                <IconButton onClick={() => handleRemoveItem(item.productId)}>
                   <MdOutlineDeleteOutline size={20} />
                 </IconButton>
               </Box>
@@ -64,11 +103,11 @@ const navigate = useNavigate();
           )}
         </Box>
 
-        {/* Fixed Bottom Section */}
+        {/* Bottom Total and Actions */}
         <Box sx={{ p: 2, borderTop: '1px solid #ccc' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
             <Typography variant="body1">Total (tax excl.)</Typography>
-            <Typography variant="body1" color="error">
+            <Typography variant="body1" fontWeight="bold" color="error">
               ₹{getTotal().toFixed(2)}
             </Typography>
           </Box>
@@ -90,7 +129,6 @@ const navigate = useNavigate();
             </Button>
           </Box>
         </Box>
-
       </Box>
     </Drawer>
   );

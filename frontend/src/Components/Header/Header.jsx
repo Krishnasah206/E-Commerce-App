@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 import Search from '../Search/Search';
 import Badge from '@mui/material/Badge';
@@ -10,6 +12,8 @@ import { FaRegHeart } from "react-icons/fa";
 import Tooltip from '@mui/material/Tooltip';
 import Navbar from '../Navbar/Navbar';
 import CartContainer from '../Cart/CartContainer';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import axios from 'axios';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -21,22 +25,39 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 function Header() {
+  const [userName, setUserName] = useState(localStorage.getItem("userName"));
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [isSticky, setIsSticky] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([
-    {
-      name: 'Apple iPhone 15 (Blue)',
-      quantity: 2,
-      price: 45999,
-      image: 'https://serviceapi.spicezgold.com/download/1742446875533_app3.jpeg',
-    },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+
+  // Inside Header component:
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openProfileMenu = Boolean(anchorEl);
+
+  const handleProfileClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseProfileMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
+
 
   const toggleCart = (open) => () => setCartOpen(open);
 
-  const handleRemoveItem = (index) => {
-    const updatedItems = cartItems.filter((_, i) => i !== index);
-    setCartItems(updatedItems);
+  const handleRemoveItem = async (productId) => {
+    try {
+      await axios.delete(`http://localhost:8080/journal/api/cart/${userId}/remove/${productId}`);
+      setCartItems((prev) => prev.filter(item => item.id !== productId));
+    } catch (err) {
+      console.error("Error removing item:", err);
+    }
   };
 
   useEffect(() => {
@@ -47,6 +68,21 @@ function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // 🛒 Fetch user-specific cart items
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`http://localhost:8080/journal/api/cart/details/${userId}`);
+        setCartItems(res.data);
+      } catch (err) {
+        console.error("Failed to fetch cart items", err);
+      }
+    };
+
+    fetchCartItems();
+  }, [userId]);
 
   return (
     <>
@@ -85,9 +121,54 @@ function Header() {
               {/* Icons */}
               <div className="w-full sm:w-[30%] flex justify-center sm:justify-end items-center">
                 <ul className="flex items-center gap-3">
-                  <li className="text-sm font-medium link">
-                    <Link to="/login" className="mr-1">Login</Link> | <Link to="/register">Register</Link>
-                  </li>
+                  {userName ? (
+                    <li className="text-sm font-small flex items-center gap-2 px-1 py-1 cursor-pointer">
+                      <IconButton
+                        onClick={handleProfileClick}
+                        className="gap-1 hover:bg-gray-200 rounded-none px-2 py-1"
+                        disableRipple
+                        disableFocusRipple
+                        sx={{
+                          backgroundColor: 'transparent',
+                          '&:hover': {
+                            backgroundColor: '#e5e7eb', // Tailwind's gray-200
+                            borderRadius: 0,
+                          },
+                        }}
+                      >
+                        <AccountCircleIcon fontSize="medium" />
+                        <span className="hidden sm:inline-block">
+                          {userName.charAt(0).toUpperCase() + userName.slice(1)}
+                        </span>
+
+                      </IconButton>
+
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={openProfileMenu}
+                        onClose={handleCloseProfileMenu}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                      >
+                        <MenuItem component={Link} to="/" onClick={handleCloseProfileMenu}>My Profile</MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            handleCloseProfileMenu();
+                            window.location.href = "/cartListing"; // or use navigate()
+                          }}
+                        >
+                          My Cart
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                      </Menu>
+                    </li>
+
+                  ) : (
+                    <li className="text-sm font-medium link">
+                      <Link to="/login" className="mr-1">Login</Link> | <Link to="/register">Register</Link>
+                    </li>
+                  )}
+
                   <li>
                     <Tooltip title="Wishlist">
                       <IconButton>

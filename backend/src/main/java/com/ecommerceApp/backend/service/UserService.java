@@ -1,5 +1,6 @@
 package com.ecommerceApp.backend.service;
 
+import com.ecommerceApp.backend.dto.LoginResponse;
 import com.ecommerceApp.backend.entity.User;
 import com.ecommerceApp.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -25,8 +27,9 @@ public class UserService {
         User newUser = User.builder()
                 .userName(request.getUserName())
                 .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
                 .password(encoder.encode(request.getPassword()))
-                .roles(Set.of("USER")) // default role
+                .roles(Set.of("ROLE_USER")) // default role
                 .build();
 
         userRepository.save(newUser);
@@ -35,17 +38,27 @@ public class UserService {
                 .body("User registered: " + newUser.getUserName());
     }
 
-    public ResponseEntity<String> login(String userName, String password) {
-        return userRepository.findByUserName(userName)
-                .map(user -> {
-                    if (encoder.matches(password, user.getPassword())) {
-                        return ResponseEntity.ok("Login successful");
-                    } else {
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                .body("Invalid credentials");
-                    }
-                })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("User not found"));
+    public ResponseEntity<LoginResponse> login(String loginField, String password) {
+        Optional<User> userOpt = userRepository.findByUserName(loginField);
+
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByEmail(loginField);
+        }
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.badRequest().build(); // optionally include a body
+        }
+
+        User user = userOpt.get();
+
+        if (!encoder.matches(password, user.getPassword())) {
+            return ResponseEntity.badRequest().build(); // optionally include a body
+        }
+
+        return ResponseEntity.ok(
+                new LoginResponse(user.getUserName(), user.getId().toHexString())
+        );
+
     }
+
 }
