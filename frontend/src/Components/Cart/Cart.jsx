@@ -14,14 +14,24 @@ const Cart = ({ anchor = 'right', open, toggleDrawer }) => {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   // Fetch cart items when drawer opens
   useEffect(() => {
+    console.log(userId, token);
     if (!userId || !open) return;
 
     const fetchCart = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/journal/api/cart/details/${userId}`);
+        const response = await axios.get(
+          `http://localhost:8080/api/cart/details/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
         setCartItems(response.data);
       } catch (error) {
         console.error("Failed to fetch cart items:", error);
@@ -29,12 +39,19 @@ const Cart = ({ anchor = 'right', open, toggleDrawer }) => {
     };
 
     fetchCart();
-  }, [open, userId]);
+  }, [open, userId, token]);
 
   // Remove item from cart
   const handleRemoveItem = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8080/journal/api/cart/${userId}/remove/${productId}`);
+      await axios.delete(
+        `http://localhost:8080/api/cart/${userId}/remove/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setCartItems(prev => prev.filter(item => item.productId !== productId));
     } catch (error) {
       console.error("Failed to remove item:", error);
@@ -84,12 +101,11 @@ const Cart = ({ anchor = 'right', open, toggleDrawer }) => {
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
-                      maxWidth: '180px' // adjust width as per layout
+                      maxWidth: '180px'
                     }}
                   >
                     {item.productName}
                   </Typography>
-
                   <Typography variant="body2" color="text.secondary">Qty: {item.quantity}</Typography>
                   <Typography variant="body2" color="error">
                     ₹{(item.price * item.quantity).toFixed(2)}

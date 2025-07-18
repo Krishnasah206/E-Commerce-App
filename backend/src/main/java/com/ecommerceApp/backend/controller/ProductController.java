@@ -7,6 +7,7 @@ import com.ecommerceApp.backend.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173/")
 public class ProductController {
@@ -89,6 +90,45 @@ public class ProductController {
         productRepository.deleteById(new ObjectId(id));
         return ResponseEntity.noContent().build();
     }
+
+//    @GetMapping("/search")
+//    public ResponseEntity<?> searchProductByName(@RequestParam String query) {
+//        List<Product> matchingProducts = productRepository.findByProductNameContainingIgnoreCase(query);
+//        if (matchingProducts.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No product found");
+//        }
+//        return ResponseEntity.ok(matchingProducts);
+//    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchProductByNameAndCategory(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) List<String> categories) {
+
+        List<Product> matchingProducts;
+
+        if (query != null && categories != null && !categories.isEmpty()) {
+            // ✅ Both query and category filter
+            matchingProducts = productRepository
+                    .findByProductNameContainingIgnoreCaseAndCategoryIn(query, categories);
+        } else if (query != null) {
+            // ✅ Only search query
+            matchingProducts = productRepository.findByProductNameContainingIgnoreCase(query);
+        } else if (categories != null && !categories.isEmpty()) {
+            // ✅ Only category filter
+            matchingProducts = productRepository.findByCategoryIn(categories);
+        } else {
+            // ✅ No filter, return all
+            matchingProducts = productRepository.findAll();
+        }
+
+        if (matchingProducts.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No product found");
+        }
+        return ResponseEntity.ok(matchingProducts);
+    }
+
+
 
     private ProductDTO convertToDTO(Product product) {
         return ProductDTO.builder()

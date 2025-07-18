@@ -27,6 +27,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 function Header() {
   const [userName, setUserName] = useState(localStorage.getItem("userName"));
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [isSticky, setIsSticky] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
@@ -53,7 +54,7 @@ function Header() {
 
   const handleRemoveItem = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8080/journal/api/cart/${userId}/remove/${productId}`);
+      await axios.delete(`http://localhost:8080/api/cart/${userId}/remove/${productId}`);
       setCartItems((prev) => prev.filter(item => item.id !== productId));
     } catch (err) {
       console.error("Error removing item:", err);
@@ -71,10 +72,21 @@ function Header() {
 
   // 🛒 Fetch user-specific cart items
   useEffect(() => {
+    if (!userId || !token) return;
+    
     const fetchCartItems = async () => {
       if (!userId) return;
       try {
-        const res = await axios.get(`http://localhost:8080/journal/api/cart/details/${userId}`);
+        const res = await axios.get(
+          `http://localhost:8080/api/cart/details/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+          }
+        );
+        console.log("Fetched cart items:", res.data);
         setCartItems(res.data);
       } catch (err) {
         console.error("Failed to fetch cart items", err);
@@ -82,7 +94,7 @@ function Header() {
     };
 
     fetchCartItems();
-  }, [userId]);
+  }, [open, userId, token]);
 
   return (
     <>
@@ -190,7 +202,7 @@ function Header() {
                   <li>
                     <Tooltip title="Cart">
                       <IconButton onClick={toggleCart(true)}>
-                        <StyledBadge badgeContent={cartItems.length} color="secondary">
+                        <StyledBadge badgeContent={cartItems?.length || 0} color="secondary">
                           <MdOutlineShoppingCart />
                         </StyledBadge>
                       </IconButton>

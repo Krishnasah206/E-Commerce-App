@@ -1,11 +1,23 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://Krishnasah2060:QF0JhRlQgzk48bMQ@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://Krishnasah2060:YZ1DSTFrqo8PXBYN@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: ecommerce
       auto-index-creation: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: krishnasah2060@gmail.com
+    password: hwlknutilqbopgns
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
   port: 8080
   servlet:
-    context-path: /journal
+    context-path: /api
+

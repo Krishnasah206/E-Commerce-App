@@ -13,5 +13,11 @@ public interface ProductRepository extends MongoRepository<Product, ObjectId> {
     List<Product> findByCategoryAndSubCategory(String category, String subCategory);
     long countByCategory(String category);
     List<Product> findByCategoryInIgnoreCase(List<String> categories);
+    List<Product> findByProductNameContainingIgnoreCase(String name);
+
+    List<Product> findByCategoryIn(List<String> categories);
+
+    List<Product> findByProductNameContainingIgnoreCaseAndCategoryIn(String productName, List<String> categories);
+
 }
 

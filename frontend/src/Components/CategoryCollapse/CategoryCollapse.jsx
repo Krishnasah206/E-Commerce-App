@@ -17,12 +17,11 @@ function CategoryCollapse() {
         {/* Fashion Category */}
         <li className="list-none relative">
           <div className="relative">
-            <Button
-              className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all"
-              onClick={toggleFashion}
-            >
-              Fashion
-            </Button>
+            <Link to="/productListing" state={{ category: 'Fashion' }} className='w-full'>
+              <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
+                Fashion
+              </Button>
+            </Link>
 
             {isFashionOpen ? (
               <FaRegSquareMinus
@@ -41,7 +40,7 @@ function CategoryCollapse() {
             <ul className="submenu w-full pl-6 mt-1">
               {['Men', 'Women', 'Children'].map((sub, i) => (
                 <li className="list-none relative" key={i}>
-                  <Link to="/productListing" className='w-full'>
+                  <Link to="/productListing" state={{ category: 'Fashion' }} className='w-full'>
                     <Button className="w-full !text-left !justify-start !px-6 !py-2 !text-[14px] !text-gray-600 hover:!bg-gray-50 transition">
                       {sub}
                     </Button>
@@ -53,9 +52,9 @@ function CategoryCollapse() {
         </li>
 
         {/* Other categories */}
-        {['Electronics', 'Bags', 'Footwear', 'Groceries', 'Beauty', 'Wellness', 'Jewellery'].map((cat, i) => (
+        {['Electronics', 'Bag', 'Footwear', 'Groceries', 'Beauty', 'Wellness', 'Jewellery'].map((cat, i) => (
           <li className="list-none relative" key={i}>
-            <Link to="/productListing" className='w-full'>
+            <Link to="/productListing" state={{ category: cat }} className='w-full'>
               <Button className="w-full !text-left !justify-start !px-4 !py-3 !text-[15px] !text-[rgba(0,0,0,0.8)] hover:!bg-gray-100 transition-all">
                 {cat}
               </Button>

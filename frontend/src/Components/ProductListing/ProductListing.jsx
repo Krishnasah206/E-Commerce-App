@@ -13,9 +13,12 @@ import MenuItem from '@mui/material/MenuItem';
 import ProductItemListView from '../ProductItemListView/ProductItemListView';
 import axios from 'axios';
 
-function ProductListing() {
+function ProductListing({ cartOpen = false, setCartItems = () => {} }) {
   const location = useLocation();
-  const defaultCategory = location.state?.category || null;
+  const defaultCategory = location.state?.category || 'Fashion';
+  const searchQuery = location.state?.searchQuery || '';
+
+  const token = localStorage.getItem("token");
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemView, setItemView] = useState('grid');
@@ -29,44 +32,33 @@ function ProductListing() {
   const itemsPerPage = 16;
 
   useEffect(() => {
-    const fetchFiltered = async () => {
+    const fetchFilteredProducts = async () => {
       try {
-        let url = 'http://localhost:8080/journal/api/products/filter';
-
-        const response = await axios.get(url, {
+        const response = await axios.get('http://localhost:8080/api/products/search', {
           params: {
-            categories: selectedCategories, // axios will send categories=Fashion&categories=Electronics
+            categories: selectedCategories,
+            query: searchQuery || undefined,
           },
           paramsSerializer: (params) => {
-            return params.categories.map(cat => `categories=${encodeURIComponent(cat)}`).join('&');
-          }
+            const catString = params.categories?.map(cat => `categories=${encodeURIComponent(cat)}`).join('&') || '';
+            const queryString = params.query ? `&query=${encodeURIComponent(params.query)}` : '';
+            return `${catString}${queryString}`;
+          },
         });
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
         setAllItems(response.data);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (error) {
         console.error('Error fetching filtered products:', error);
       }
     };
 
-    if (selectedCategories.length > 0) {
-      fetchFiltered();
-    } else {
-      setAllItems([]); // Optionally clear when none selected
-    }
-  }, [selectedCategories]);
+    fetchFilteredProducts();
+  }, [selectedCategories, searchQuery]);
 
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handlePageChange = (event, value) => {
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+  const handlePageChange = (_, value) => {
     setCurrentPage(value);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -75,150 +67,96 @@ function ProductListing() {
     setSelectedCategories(prev =>
       isChecked ? [...prev, category] : prev.filter(c => c !== category)
     );
-    setCurrentPage(1); // Reset to page 1 on filter change
+    setCurrentPage(1);
   };
 
   const totalPages = Math.ceil(allItems.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  
+
   const sortedItems = [...allItems].sort((a, b) => {
+    const priceA = a.mrp - a.mrp * (a.discount / 100);
+    const priceB = b.mrp - b.mrp * (b.discount / 100);
+
     switch (sortOption) {
-      case 'name-asc':
-        return a.productName.localeCompare(b.productName);
-      case 'name-desc':
-        return b.productName.localeCompare(a.productName);
-      case 'price-asc':
-        return (a.mrp - a.mrp * (a.discount / 100)) - (b.mrp - b.mrp * (b.discount / 100));
-      case 'price-desc':
-        return (b.mrp - b.mrp * (b.discount / 100)) - (a.mrp - a.mrp * (a.discount / 100));
-      default:
-        return 0;
+      case 'name-asc': return a.productName.localeCompare(b.productName);
+      case 'name-desc': return b.productName.localeCompare(a.productName);
+      case 'price-asc': return priceA - priceB;
+      case 'price-desc': return priceB - priceA;
+      default: return 0;
     }
   });
 
   const paginatedItems = sortedItems.slice(startIndex, startIndex + itemsPerPage);
 
-
   return (
     <section className="product-listing py-5">
       <div className="container py-2">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="|"
-          sx={{
-            '& .MuiBreadcrumbs-separator': {
-              mx: 1,
-              color: 'rgba(0,0,0,0.5)',
-              fontWeight: 500,
-            },
-          }}
-        >
-          <Link underline="hover" color="inherit" href="/" className='transition text-[14px] font-medium text-gray-700 hover:text-black'>
-            Home
-          </Link>
-          <Link underline="hover" color="inherit" href="/productListing" className='transition text-[14px] font-medium text-gray-700 hover:text-black'>
-            Fashion
-          </Link>
+        <Breadcrumbs aria-label="breadcrumb" separator="|">
+          <Link underline="hover" color="inherit" href="/">Home</Link>
+          <Link underline="hover" color="inherit" href="/productListing">Products</Link>
         </Breadcrumbs>
       </div>
 
       <div className="bg-white p-2">
         <div className="container flex gap-3">
-          <div className="sidebarWrapper w-[20%] h-fit sticky top-4 self-start">
-            <SideBar
-              selectedCategories={selectedCategories}
-              onCategoryChange={handleCategoryChange}
-            />
+          <div className="sidebarWrapper w-[20%] sticky top-4">
+            <SideBar selectedCategories={selectedCategories} onCategoryChange={handleCategoryChange} />
           </div>
 
           <div className="rightContent w-[80%] py-3">
-            <div className="bg-[#f1f1f1] p-2 w-full mb-3 rounded-md flex items-center justify-between">
-              <div className="col1 flex items-center gap-2">
-                <Button
-                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${itemView === 'list' ? '!bg-[#ff5252] !text-white' : '!text-[#000]'}`}
-                  onClick={() => setItemView('list')}
-                >
-                  <LuMenu />
-                </Button>
-                <Button
-                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${itemView === 'grid' ? '!bg-[#ff5252] !text-white' : '!text-[#000]'}`}
-                  onClick={() => setItemView('grid')}
-                >
-                  <IoGridSharp />
-                </Button>
-                <span className='text-[rgba(0,0,0,0.7)] text-[14px] font-[500] pl-3'>
-                  {allItems.length} products found
-                </span>
+            <div className="bg-[#f1f1f1] p-2 mb-3 rounded-md flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Button onClick={() => setItemView('list')} className={`!w-10 !h-10 !rounded-full ${itemView === 'list' ? '!bg-[#ff5252] !text-white' : '!text-black'}`}><LuMenu /></Button>
+                <Button onClick={() => setItemView('grid')} className={`!w-10 !h-10 !rounded-full ${itemView === 'grid' ? '!bg-[#ff5252] !text-white' : '!text-black'}`}><IoGridSharp /></Button>
+                <span className="text-sm font-medium text-gray-600 pl-3">{allItems.length} products found</span>
               </div>
 
-              <div className="col2 ml-auto flex items-center justify-end gap-3 pr-4">
-                <span className='text-[14px] font-[500] pl-3 text-[rgba(0,0,0,0.7)]'>Sort by:</span>
-                <Button
-                  id="basic-button"
-                  aria-controls={open ? 'basic-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}
-                  onClick={handleClick}
-                  className='!bg-white !text-[12px] !text-[#000] !capitalize !border !border-[#000]'
-                >
-                  {(() => {
-                    switch (sortOption) {
-                      case 'name-asc': return 'Name, A to Z';
-                      case 'name-desc': return 'Name, Z to A';
-                      case 'price-asc': return 'Price, low to high';
-                      case 'price-desc': return 'Price, high to low';
-                      default: return 'Sort';
-                    }
-                  })()}
-                </Button>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  slotProps={{
-                    list: {
-                      'aria-labelledby': 'basic-button',
-                    },
-                  }}
-                >
-                  <MenuItem
-                    onClick={() => { setSortOption('name-asc'); handleClose(); }}
-                    className='!text-[13px] !text-[#000]'
-                  >
-                    Name, A to Z
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => { setSortOption('name-desc'); handleClose(); }}
-                    className='!text-[13px] !text-[#000]'
-                  >
-                    Name, Z to A
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => { setSortOption('price-asc'); handleClose(); }}
-                    className='!text-[13px] !text-[#000]'
-                  >
-                    Price, low to high
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => { setSortOption('price-desc'); handleClose(); }}
-                    className='!text-[13px] !text-[#000]'
-                  >
-                    Price, high to low
-                  </MenuItem>
-
+              <div className="ml-auto flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-600">Sort by:</span>
+                <Button onClick={handleClick} className="!text-sm !text-black !border !border-black">{
+                  {
+                    'name-asc': 'Name, A to Z',
+                    'name-desc': 'Name, Z to A',
+                    'price-asc': 'Price, low to high',
+                    'price-desc': 'Price, high to low'
+                  }[sortOption]
+                }</Button>
+                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                  {['name-asc', 'name-desc', 'price-asc', 'price-desc'].map(option => (
+                    <MenuItem key={option} onClick={() => { setSortOption(option); handleClose(); }}>
+                      {{
+                        'name-asc': 'Name, A to Z',
+                        'name-desc': 'Name, Z to A',
+                        'price-asc': 'Price, low to high',
+                        'price-desc': 'Price, high to low'
+                      }[option]}
+                    </MenuItem>
+                  ))}
                 </Menu>
               </div>
             </div>
 
             <div className={`grid ${itemView === 'grid' ? 'grid-cols-4 md:grid-cols-4 sm:grid-cols-2 gap-4' : 'grid-cols-1 gap-3'}`}>
-              {paginatedItems.map((item) => {
-                console.log("Rendering item:", item);
-                return itemView === 'grid'
-                  ? <ProductItem key={item.id || item._id} product={item} />
-                  : <ProductItemListView key={item.id || item._id} product={item} />
+              {paginatedItems.map((item, index) => {
+                const key = item._id || index;
+                return itemView === 'grid' ? (
+                  <ProductItem
+                    key={key}
+                    product={item}
+                    token={token}
+                    cartOpen={cartOpen}
+                    setCartItems={setCartItems}
+                  />
+                ) : (
+                  <ProductItemListView
+                    key={key}
+                    product={item}
+                    token={token}
+                    cartOpen={cartOpen}
+                    setCartItems={setCartItems}
+                  />
+                );
               })}
-
             </div>
 
             <div className="mt-6 flex justify-center">
@@ -227,19 +165,13 @@ function ProductListing() {
                 page={currentPage}
                 onChange={handlePageChange}
                 sx={{
-                  '& .MuiPaginationItem-root': {
-                    color: '#ff5252',               // Unselected number & arrows
+                  '& .MuiPaginationItem-root': { color: '#ff5252' },
+                  '& .Mui-selected': {
+                    backgroundColor: '#ff5252',
+                    color: '#fff',
+                    '&:hover': { backgroundColor: '#e64545' },
                   },
-                  '& .MuiPaginationItem-root.Mui-selected': {
-                    backgroundColor: '#ff5252',     // Red background for selected
-                    color: '#fff',                  // White number
-                  },
-                  '& .MuiPaginationItem-root.Mui-selected:hover': {
-                    backgroundColor: '#e64545',     // Hover effect
-                  },
-                  '& .MuiPaginationItem-icon': {
-                    color: '#ff5252',               // Arrow icons
-                  }
+                  '& .MuiPaginationItem-icon': { color: '#ff5252' }
                 }}
               />
             </div>

@@ -8,9 +8,9 @@ import ProductListing from './Components/ProductListing/ProductListing';
 import ProductDetailsWrapper from './Components/ProductDetailsWrapper/ProductDetailsWrapper';
 import CartListing from './Components/Cart/CartListing';
 
-// ✅ Import login and register pages
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import AuthRegisterWithOtp from './pages/AuthRegisterWithOtp';
+import ResetPasswordFlow from './pages/ResetPasswordFlow';
 
 function App() {
   return (
@@ -22,9 +22,10 @@ function App() {
         <Route path="/product/:id" element={<ProductDetailsWrapper />} />
         <Route path="/cartListing" element={<CartListing />} />
 
-        {/* ✅ Add Auth Routes */}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+
+        <Route path='/register' element={<AuthRegisterWithOtp />} />
+        <Route path='/reset-password' element={<ResetPasswordFlow />} />
       </Routes>
       <Footer />
     </BrowserRouter>

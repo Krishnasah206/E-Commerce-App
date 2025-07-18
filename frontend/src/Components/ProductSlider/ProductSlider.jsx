@@ -6,21 +6,31 @@ import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
-function ProductSlider({ products = [] }) {
+
+function ProductSlider({ products = [], cartOpen = false, setCartItems = () => {} }) {
+  if (!products.length) return null;
+
   return (
-    <div className='productSlider overflow-hidden'>
+    <div className="productSlider overflow-hidden">
       <Swiper
         slidesPerView="auto"
-        spaceBetween={10}
+        spaceBetween={12}
         navigation
         pagination={{ clickable: true }}
-        modules={[Navigation, Autoplay]}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        modules={[Navigation]}
         className="mySwiper"
       >
-        {products.map((product, idx) => (
-          <SwiperSlide key={idx} className="!w-auto">
-            <ProductItem product={product} />
+        {products.map((product) => (
+          <SwiperSlide key={product.id || product._id} className="!w-auto">
+            <ProductItem
+              product={product}
+              token={localStorage.getItem("token")}
+              cartOpen={cartOpen}
+              setCartItems={setCartItems}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

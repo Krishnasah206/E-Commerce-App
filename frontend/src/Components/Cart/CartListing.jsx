@@ -5,6 +5,13 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+const token = localStorage.getItem("token");
+const config = {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+};
+
 function CartListing() {
   const [cartItems, setCartItems] = useState([]);
   const [address, setAddress] = useState(localStorage.getItem("userAddress") || "Puri - 752054");
@@ -12,16 +19,23 @@ function CartListing() {
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    if (!userId) window.location.href = "/login";
+    const storedUserId = localStorage.getItem("userId");
+    if (!storedUserId) {
+      window.location.href = "/login";
+    }
   }, []);
+
 
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/journal/api/cart/details/${userId}`);
+        console.log("Fetching cart for user:", userId);
+        console.log("Auth config:", config);
+        const res = await axios.get(`http://localhost:8080/api/cart/details/${userId}`, config);
+        console.log("Raw cart items:", res.data);
         const detailedItems = await Promise.all(
           res.data.map(async (item) => {
-            const productRes = await axios.get(`http://localhost:8080/journal/api/products/${item.productId}`);
+            const productRes = await axios.get(`http://localhost:8080/api/products/${item.productId}`, config);
             const product = productRes.data;
 
             const actualPrice = Math.round(product.mrp - (product.mrp * product.discount / 100));
@@ -42,18 +56,20 @@ function CartListing() {
       }
     };
 
+
     if (userId) fetchCartItems();
   }, [userId]);
 
   const handleRemove = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8080/journal/api/cart/${userId}/remove/${productId}`);
+      await axios.delete(`http://localhost:8080/api/cart/${userId}/remove/${productId}`, config);
       setCartItems(prev => prev.filter(item => item.productId !== productId));
     } catch (err) {
       console.error("Error removing item:", err);
     }
   };
 
+  // ... rest of your CartListing component remains the same
   const handleQuantityChange = (productId, newQty) => {
     setCartItems(prev =>
       prev.map(item =>
