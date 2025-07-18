@@ -58,4 +58,15 @@ public class AuthController {
         return userService.resetPassword(email, otp, newPassword, confirmPassword);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable String userId) {
+        User user = userService.getUserById(userId);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

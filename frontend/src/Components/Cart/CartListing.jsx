@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -13,6 +14,7 @@ const config = {
 };
 
 function CartListing() {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [address, setAddress] = useState(localStorage.getItem("userAddress") || "Puri - 752054");
   const [isEditingAddress, setIsEditingAddress] = useState(false);
@@ -84,6 +86,8 @@ function CartListing() {
       )
     );
   };
+
+  
 
   const totalMRP = cartItems.reduce((sum, item) => sum + Math.round(item.mrp) * item.quantity, 0);
   const totalDiscount = cartItems.reduce((sum, item) => sum + item.itemDiscount, 0);
@@ -223,8 +227,8 @@ function CartListing() {
           </p>
         </div>
 
-        <button className="mt-6 w-full bg-orange-500 hover:bg-[#ff5252] text-white py-2 rounded text-sm font-semibold">
-          PLACE ORDER
+        <button className="mt-6 w-full bg-orange-500 hover:bg-[#ff5252] text-white py-2 rounded text-sm font-semibold" onClick={() => navigate("/checkout")}>
+          CheckOut
         </button>
       </div>
     </div>

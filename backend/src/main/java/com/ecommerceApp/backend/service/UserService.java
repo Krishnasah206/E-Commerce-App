@@ -107,26 +107,6 @@ public class UserService {
     }
 
 
-    // ✅ OTP Verification
-//    public ResponseEntity<ApiResponse> verifyOtp(String email, String otp) {
-//        Optional<User> userOpt = userRepository.findByEmail(email);
-//
-//        if (userOpt.isPresent()) {
-//            User user = userOpt.get();
-//
-//            if (otp.equals(user.getOtp()) && user.getOtpExpiry().isAfter(LocalDateTime.now())) {
-//                user.setVerified(true);
-//                user.setOtp(null);
-//                user.setOtpExpiry(null);
-//                userRepository.save(user);
-//
-//                return ResponseEntity.ok(new ApiResponse(true, "OTP verified successfully."));
-//            }
-//        }
-//
-//        return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid or expired OTP."));
-//    }
-
     public ResponseEntity<ApiResponse> resendOtp(String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
@@ -190,5 +170,10 @@ public class UserService {
 
         return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid or expired OTP."));
     }
+
+    public User getUserById(String userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
+
 
 }

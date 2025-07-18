@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import { AuthContext } from "../../context/AuthContext";
 
 const AuthForm = ({ isLogin = true }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,7 @@ const AuthForm = ({ isLogin = true }) => {
   });
 
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // ✅ use context
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,15 +67,12 @@ const AuthForm = ({ isLogin = true }) => {
       }
 
       if (isLogin) {
-        // 🔐 On successful login
-        localStorage.setItem("token", result.token);
-        localStorage.setItem("userId", result.userId);
-        localStorage.setItem("userName", result.userName);
+        // ✅ Call login from context instead of localStorage directly
+        login(result.userName, result.userId, result.token);
         toast.success("Login successful!");
         setTimeout(() => {
           navigate("/");
         }, 1000);
-
       } else {
         // 📨 After registration, redirect to OTP verification
         localStorage.setItem("emailForOtp", formData.email);

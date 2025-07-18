@@ -1,5 +1,6 @@
 package com.ecommerceApp.backend.controller;
 
+import com.ecommerceApp.backend.dto.ApiResponse;
 import com.ecommerceApp.backend.dto.CartDTO;
 import com.ecommerceApp.backend.dto.CartItemDetailsDTO;
 import com.ecommerceApp.backend.entity.User;
@@ -51,6 +52,13 @@ public class CartController {
         cartService.removeFromCart(userId, productId);
         return ResponseEntity.ok("Item removed from cart");
     }
+
+    @DeleteMapping("/{userId}/clear")
+    public ResponseEntity<ApiResponse> clearCart(@PathVariable String userId) {
+        cartService.clearCart(userId);
+        return ResponseEntity.ok(new ApiResponse(true, "Cart cleared successfully", null));
+    }
+
 
     // Utility Method to validate logged-in user
     private boolean isUserAuthorized(String userId, Principal principal) {

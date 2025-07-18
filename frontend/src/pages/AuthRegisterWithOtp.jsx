@@ -84,36 +84,67 @@ const AuthRegisterWithOtp = () => {
 
         {step === 1 && (
           <form onSubmit={handleRegister} className="space-y-4">
+            <label className="text-sm text-gray-600">
+              Enter Username <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="userName"
               placeholder="User Name"
+              required
               autoFocus
-              onChange={(e) => setFormData((prev) => ({ ...prev, userName: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, userName: e.target.value }))
+              }
               className="w-full px-4 py-2 border rounded outline-none"
             />
+
+            <label className="text-sm text-gray-600">
+              Enter Email <span className="text-red-500">*</span>
+            </label>
             <input
               type="email"
               name="email"
               placeholder="Email"
-              onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+              required
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, email: e.target.value }))
+              }
               className="w-full px-4 py-2 border rounded outline-none"
             />
+
+            <label className="text-sm text-gray-600">
+              Enter Phone Number <span className="text-red-500">*</span>
+            </label>
             <input
               type="tel"
               name="phoneNumber"
               placeholder="Phone Number"
-              onChange={(e) => setFormData((prev) => ({ ...prev, phoneNumber: e.target.value }))}
+              required
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, phoneNumber: e.target.value }))
+              }
               className="w-full px-4 py-2 border rounded outline-none"
             />
+
+            <label className="text-sm text-gray-600">
+              Enter Password <span className="text-red-500">*</span>
+            </label>
             <input
               type="password"
               name="password"
               placeholder="Password"
-              onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
+              required
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, password: e.target.value }))
+              }
               className="w-full px-4 py-2 border rounded outline-none"
             />
-            <button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded transition">
+
+            <button
+              type="submit"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded transition"
+            >
               Register
             </button>
           </form>
@@ -121,20 +152,30 @@ const AuthRegisterWithOtp = () => {
 
         {step === 2 && (
           <form onSubmit={handleOtpVerify} className="space-y-4">
+            <label className="text-sm text-gray-600">
+              An OTP has been sent to your email. Please enter it to verify.{" "}
+              <span className="text-red-500">*</span>
+            </label>
             <input
               value={otp}
+              required
               onChange={(e) => setOtp(e.target.value)}
               placeholder="Enter OTP"
               className="w-full px-4 py-2 border rounded outline-none"
               autoFocus
             />
-            <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition">
+
+            <button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition"
+            >
               Verify OTP
             </button>
           </form>
         )}
 
         <ToastContainer position="top-center" />
+
       </div>
     </div>
   );

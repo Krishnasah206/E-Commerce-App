@@ -77,7 +77,7 @@ const ResetPasswordFlow = () => {
       localStorage.removeItem("emailForOtp");
 
       setTimeout(() => {
-        navigate("/login"); // ✅ Redirect to login after 1.5 seconds
+        navigate("/login");
       }, 1500);
     } catch {
       toast.error("Network error");
@@ -93,11 +93,15 @@ const ResetPasswordFlow = () => {
 
         {step === 1 && (
           <form onSubmit={handleForgotPassword} className="space-y-4">
+            <label className="text-sm text-gray-700">
+              Enter Email <span className="text-red-500">*</span>
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
+              required
               className="w-full px-4 py-2 border rounded outline-none"
             />
             <button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded transition">
@@ -108,44 +112,66 @@ const ResetPasswordFlow = () => {
 
         {step === 2 && (
           <form onSubmit={handleOtpVerify} className="space-y-4">
+            <label className="text-sm text-gray-700">
+              Enter OTP <span className="text-red-500">*</span>
+            </label>
             <input
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="Enter OTP"
+              required
               className="w-full px-4 py-2 border rounded outline-none"
             />
             <button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded transition">
-              Verify OTP
+              Enter Verify OTP
             </button>
           </form>
         )}
 
         {step === 3 && (
           <form onSubmit={handleResetPassword} className="space-y-4">
+            <label className="text-sm text-gray-700">
+              Enter Email <span className="text-red-500">*</span>
+            </label>
             <input
               type="email"
               value={email}
               disabled
               className="w-full px-4 py-2 border rounded bg-gray-200 text-gray-500"
             />
+
+            <label className="text-sm text-gray-700">
+              Enter OTP <span className="text-red-500">*</span>
+            </label>
             <input
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="Enter OTP again"
+              required
               className="w-full px-4 py-2 border rounded outline-none"
             />
+
+            <label className="text-sm text-gray-700">
+              Enter New Password <span className="text-red-500">*</span>
+            </label>
             <input
               type="password"
               placeholder="New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              required
               className="w-full px-4 py-2 border rounded outline-none"
             />
+
+            <label className="text-sm text-gray-700">
+              Enter Confirm Password <span className="text-red-500">*</span>
+            </label>
             <input
               type="password"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              required
               className="w-full px-4 py-2 border rounded outline-none"
             />
             <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition">

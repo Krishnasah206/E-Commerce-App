@@ -136,7 +136,7 @@ function ProductListing({ cartOpen = false, setCartItems = () => {} }) {
               </div>
             </div>
 
-            <div className={`grid ${itemView === 'grid' ? 'grid-cols-4 md:grid-cols-4 sm:grid-cols-2 gap-4' : 'grid-cols-1 gap-3'}`}>
+            <div className={`grid ${itemView === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4' : 'grid-cols-1 gap-3'}`}>
               {paginatedItems.map((item, index) => {
                 const key = item._id || index;
                 return itemView === 'grid' ? (

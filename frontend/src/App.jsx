@@ -11,6 +11,11 @@ import CartListing from './Components/Cart/CartListing';
 import LoginPage from './pages/LoginPage';
 import AuthRegisterWithOtp from './pages/AuthRegisterWithOtp';
 import ResetPasswordFlow from './pages/ResetPasswordFlow';
+import Checkout from './pages/CheckOut';
+
+import OrderConfirmation from './pages/OrderConfirmation';
+
+
 
 function App() {
   return (
@@ -26,6 +31,12 @@ function App() {
 
         <Route path='/register' element={<AuthRegisterWithOtp />} />
         <Route path='/reset-password' element={<ResetPasswordFlow />} />
+
+        <Route path="/checkout" element={<Checkout />} />
+
+        
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
+
       </Routes>
       <Footer />
     </BrowserRouter>

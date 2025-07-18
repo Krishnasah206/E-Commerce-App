@@ -1,27 +1,42 @@
-// context/AuthContext.js
-import { createContext, useState, useEffect } from "react";
+// src/context/AuthContext.jsx
+import React, { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [authUser, setAuthUser] = useState(() => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-    const userName = localStorage.getItem("userName");
-    return token && userId && userName ? { token, userId, userName } : null;
-  });
+const AuthProvider = ({ children }) => {
+  const [userName, setUserName] = useState(localStorage.getItem("userName"));
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  const login = (userName, userId, token) => {
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("userId", userId);
+    localStorage.setItem("token", token);
+
+    setUserName(userName);
+    setUserId(userId);
+    setToken(token);
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    setUserName(null);
+    setUserId(null);
+    setToken(null);
+  };
 
   useEffect(() => {
-    if (authUser) {
-      localStorage.setItem("token", authUser.token);
-      localStorage.setItem("userId", authUser.userId);
-      localStorage.setItem("userName", authUser.userName);
-    }
-  }, [authUser]);
+    // Keep state in sync with localStorage
+    setUserName(localStorage.getItem("userName"));
+    setUserId(localStorage.getItem("userId"));
+    setToken(localStorage.getItem("token"));
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ authUser, setAuthUser }}>
+    <AuthContext.Provider value={{ userName, userId, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;

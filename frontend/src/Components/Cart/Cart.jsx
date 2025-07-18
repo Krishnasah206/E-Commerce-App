@@ -140,10 +140,20 @@ const Cart = ({ anchor = 'right', open, toggleDrawer }) => {
             >
               View Cart
             </Button>
-            <Button variant="outlined" fullWidth color="error">
+
+            <Button
+              variant="outlined"
+              fullWidth
+              color="error"
+              onClick={() => {
+                toggleDrawer(false)();  // Close drawer
+                navigate('/checkout');  // Go to checkout page
+              }}
+            >
               Checkout
             </Button>
           </Box>
+
         </Box>
       </Box>
     </Drawer>

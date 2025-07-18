@@ -14,6 +14,8 @@ import Navbar from '../Navbar/Navbar';
 import CartContainer from '../Cart/CartContainer';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import axios from 'axios';
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -25,7 +27,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 function Header() {
-  const [userName, setUserName] = useState(localStorage.getItem("userName"));
+  const { userName, logout } = useContext(AuthContext);
+  // const [userName, setUserName] = useState(localStorage.getItem("userName"));
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [isSticky, setIsSticky] = useState(false);
@@ -45,10 +48,9 @@ function Header() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    logout();
     window.location.href = "/login";
   };
-
 
   const toggleCart = (open) => () => setCartOpen(open);
 
