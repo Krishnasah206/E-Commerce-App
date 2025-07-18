@@ -16,6 +16,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import axios from 'axios';
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -27,6 +28,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 function Header() {
+  const navigate = useNavigate();
   const { userName, logout } = useContext(AuthContext);
   // const [userName, setUserName] = useState(localStorage.getItem("userName"));
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
@@ -49,7 +51,7 @@ function Header() {
 
   const handleLogout = () => {
     logout();
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   const toggleCart = (open) => () => setCartOpen(open);
@@ -96,14 +98,14 @@ function Header() {
     };
 
     fetchCartItems();
-  }, [open, userId, token]);
+  }, [cartOpen, userId, token]);
 
   return (
     <>
       <header className="w-full z-50">
         {/* Top Strip */}
-        <div className={`top-strip py-2 border-t border-b border-gray-500 bg-white transition-all duration-500 ease-in-out ${
-          isSticky ? 'opacity-0 -translate-y-full h-0 overflow-hidden' : 'opacity-100 translate-y-0'
+        <div className={`hidden lg:block top-strip py-2 border-t border-b border-gray-500 bg-white transition-all duration-500 ease-in-out ${
+  isSticky ? 'opacity-0 -translate-y-full h-0 overflow-hidden' : 'opacity-100 translate-y-0'
         }`}>
           <div className="container flex items-center justify-between">
             <p className="text-sm font-medium w-1/2">
@@ -124,8 +126,22 @@ function Header() {
             <div className="container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               {/* Logo */}
               <div className="w-full sm:w-[15%] flex justify-center sm:justify-start">
-                <Link to="/"><img src="/logo.png" alt="Logo" className="h-10" /></Link>
+                <Link to="/">
+                  {/* Logo for lg and above */}
+                  <img
+                    src="/logo.png"
+                    alt="Logo"
+                    className="h-10 hidden lg:block"
+                  />
+                  {/* Logo for sm and md */}
+                  <img
+                    src="/logo-small.jpg"
+                    alt="Small Logo"
+                    className="h-10 block lg:hidden"
+                  />
+                </Link>
               </div>
+
 
               {/* Search */}
               <div className="w-full sm:w-[50%] px-4 sm:px-0">
@@ -137,6 +153,8 @@ function Header() {
                 <ul className="flex items-center gap-3">
                   {userName ? (
                     <li className="text-sm font-small flex items-center gap-2 px-1 py-1 cursor-pointer">
+                      
+
                       <IconButton
                         onClick={handleProfileClick}
                         className="gap-1 hover:bg-gray-200 rounded-none px-2 py-1"
@@ -145,17 +163,17 @@ function Header() {
                         sx={{
                           backgroundColor: 'transparent',
                           '&:hover': {
-                            backgroundColor: '#e5e7eb', // Tailwind's gray-200
+                            backgroundColor: '#e5e7eb',
                             borderRadius: 0,
                           },
                         }}
                       >
                         <AccountCircleIcon fontSize="medium" />
-                        <span className="hidden sm:inline-block">
+                        <span className="hidden lg:inline-block">
                           {userName.charAt(0).toUpperCase() + userName.slice(1)}
                         </span>
-
                       </IconButton>
+
 
                       <Menu
                         anchorEl={anchorEl}
@@ -183,19 +201,19 @@ function Header() {
                     </li>
                   )}
 
-                  <li>
+                  <li className="hidden lg:inline-block">
                     <Tooltip title="Wishlist">
                       <IconButton>
-                        <StyledBadge badgeContent={4} color="secondary">
+                        <StyledBadge badgeContent={0} color="secondary">
                           <FaRegHeart />
                         </StyledBadge>
                       </IconButton>
                     </Tooltip>
                   </li>
-                  <li>
+                  <li className="hidden lg:inline-block">
                     <Tooltip title="Compare">
                       <IconButton>
-                        <StyledBadge badgeContent={5} color="secondary">
+                        <StyledBadge badgeContent={0} color="secondary">
                           <LuGitCompareArrows />
                         </StyledBadge>
                       </IconButton>
