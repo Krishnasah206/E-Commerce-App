@@ -1,14 +1,14 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://Krishnasah2060:YZ1DSTFrqo8PXBYN@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://Krishnasah:<dbPassword>@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: ecommerce
       auto-index-creation: true
   mail:
     host: smtp.gmail.com
     port: 587
-    username: krishnasah2060@gmail.com
-    password: hwlknutilqbopgns
+    username: your_email_address
+    password: Password
     properties:
       mail:
         smtp:
