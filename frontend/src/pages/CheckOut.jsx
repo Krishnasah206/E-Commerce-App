@@ -27,7 +27,7 @@ const Checkout = () => {
     };
 
     axios
-      .get(`http://localhost:8080/api/cart/details/${userId}`, config)
+      .get(`${import.meta.env.VITE_API_URL}/cart/details/${userId}`, config)
       .then((res) => {
         const items = Array.isArray(res.data)
           ? res.data
@@ -45,7 +45,7 @@ const Checkout = () => {
       });
 
     axios
-      .get(`http://localhost:8080/api/auth/user/${userId}`, config)
+      .get(`${import.meta.env.VITE_API_URL}/auth/user/${userId}`, config)
       .then((res) => {
         setEmail(res.data.email);
       });
@@ -80,14 +80,14 @@ const Checkout = () => {
       };
 
       const res = await axios.post(
-        "http://localhost:8080/api/orders/place",
+        `${import.meta.env.VITE_API_URL}/orders/place`,
         payload,
         config
       );
 
       if (res.data.success) {
         await axios.delete(
-          `http://localhost:8080/api/cart/${userId}/clear`,
+          `${import.meta.env.VITE_API_URL}/cart/${userId}/clear`,
           config
         );
         toast.success("Order placed successfully!");

@@ -58,7 +58,7 @@ function Header() {
 
   const handleRemoveItem = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/cart/${userId}/remove/${productId}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/cart/${userId}/remove/${productId}`);
       setCartItems((prev) => prev.filter(item => item.id !== productId));
     } catch (err) {
       console.error("Error removing item:", err);
@@ -82,7 +82,7 @@ function Header() {
       if (!userId) return;
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/cart/details/${userId}`,
+          `${import.meta.env.VITE_API_URL}/cart/details/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

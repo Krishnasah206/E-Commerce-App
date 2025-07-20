@@ -13,7 +13,7 @@ const Search = () => {
     if (trimmedQuery === "") return;
 
     try {
-      const res = await axios.get(`http://localhost:8080/api/products/search`, {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/products/search`, {
         params: { query: trimmedQuery },
       });
 

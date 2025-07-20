@@ -20,14 +20,14 @@ function Home() {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/products') // Replace with your actual API endpoint
+    axios.get(`${import.meta.env.VITE_API_URL}/products`) // Replace with your actual API endpoint
       .then(res => setProducts(res.data))
       .catch(err => console.error('Error fetching products:', err));
   }, []);
 
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/blogs')
+    axios.get(`${import.meta.env.VITE_API_URL}/blogs`)
       .then(res => setBlogs(res.data))
       .catch(err => console.error('Error fetching blogs:', err));
   }, []);

@@ -18,16 +18,26 @@ function Navbar() {
   return (
     <>
     <nav className='py-2'>
-        <div className="container flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-8">
+        <div className="container flex flex-row items-center justify-between gap-2 sm:gap-8">
             <div className="col1 w-[20%]">
-                <Button className='!text-black gap-2 w-full' onClick={openCatPanel}>
+                <Button className="!text-black gap-2 w-full" onClick={openCatPanel}>
                     <FaBarsStaggered className="text-[18px]" />
-                    SHOP BY CATEGORIES
-                    <FaAngleDown className='text-[13px] ml-auto font-bold' />
+
+                    {/* Text for lg and above */}
+                    <span className="hidden lg:inline">SHOP BY CATEGORIES</span>
+
+                    {/* Text for md only */}
+                    <span className="hidden md:inline lg:hidden">Category</span>
+
+                    {/* Text hidden for sm (no span shown) */}
+
+                    <FaAngleDown className="hidden sm:inline-block text-[13px] ml-auto font-bold" />
+
                 </Button>
             </div>
 
-            <div className="col_2 w-[60%] relative hidden md:block">
+
+            <div className="col_2 w-[60%] relative hidden lg:block">
                 <ul className='nav flex items-center gap-3'>
                     <li className='list-none'>
                         <Link to="/" className='link transition text-[14px] font-[500]' >
@@ -106,8 +116,18 @@ function Navbar() {
 
             <div className="col_3 w-[20%] flex items-center ml-8 gap-2">
                 <IoRocketOutline className="text-gray-600" />
-                <p className='text-[14px] font-[500]'>Free International Delivery</p>
+                
+                {/* Text for lg and above */}
+                <p className="text-[14px] font-[500] hidden lg:block">
+                    Free Delivery
+                </p>
+
+                {/* Text for sm and md */}
+                <p className="text-[14px] font-[500] block lg:hidden">
+                    Delivery
+                </p>
             </div>
+
 
 
         </div>

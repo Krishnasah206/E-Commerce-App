@@ -34,7 +34,7 @@ function ProductListing({ cartOpen = false, setCartItems = () => {} }) {
   useEffect(() => {
     const fetchFilteredProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/products/search', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/products/search`, {
           params: {
             categories: selectedCategories,
             query: searchQuery || undefined,

@@ -24,7 +24,7 @@ const Cart = ({ anchor = 'right', open, toggleDrawer }) => {
     const fetchCart = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/cart/details/${userId}`,
+          `${import.meta.env.VITE_API_URL}/cart/details/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ const Cart = ({ anchor = 'right', open, toggleDrawer }) => {
   const handleRemoveItem = async (productId) => {
     try {
       await axios.delete(
-        `http://localhost:8080/api/cart/${userId}/remove/${productId}`,
+        `${import.meta.env.VITE_API_URL}/cart/${userId}/remove/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

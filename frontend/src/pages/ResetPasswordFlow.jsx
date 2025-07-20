@@ -16,7 +16,7 @@ const ResetPasswordFlow = () => {
     if (!email) return toast.error("Enter your email");
 
     try {
-      const res = await fetch("http://localhost:8080/api/auth/forgot-password", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -40,7 +40,7 @@ const ResetPasswordFlow = () => {
     if (!otp || !email) return toast.error("Missing fields");
 
     try {
-      const res = await fetch("http://localhost:8080/api/auth/verify-otp", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -64,7 +64,7 @@ const ResetPasswordFlow = () => {
       return toast.error("Passwords must match");
 
     try {
-      const res = await fetch("http://localhost:8080/api/auth/reset-password", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, newPassword, confirmPassword, otp }),

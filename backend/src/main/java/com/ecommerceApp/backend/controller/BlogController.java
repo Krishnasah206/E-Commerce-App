@@ -15,7 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/blogs")
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class BlogController {
 

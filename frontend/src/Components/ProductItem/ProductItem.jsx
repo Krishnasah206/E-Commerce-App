@@ -22,7 +22,7 @@ function ProductItem({ product, token, cartOpen, setCartItems }) {
 
     try {
       const res = await axios.get(
-        `http://localhost:8080/api/cart/details/${userId}`,
+        `${import.meta.env.VITE_API_URL}/cart/details/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
@@ -48,7 +48,7 @@ function ProductItem({ product, token, cartOpen, setCartItems }) {
     setAdding(true);
     try {
       await axios.post(
-        `http://localhost:8080/api/cart/${userId}/add`,
+        `${import.meta.env.VITE_API_URL}/cart/${userId}/add`,
         payload,
         {
           headers: {

@@ -1,14 +1,15 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://Krishnasah2060:YZ1DSTFrqo8PXBYN@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: ${SPRING_DATA_MONGODB_URI}          # MongoDB connection string from env
       database: ecommerce
       auto-index-creation: true
+
   mail:
     host: smtp.gmail.com
     port: 587
-    username: krishnasah2060@gmail.com
-    password: hwlknutilqbopgns
+    username: ${SPRING_MAIL_USERNAME}          # Gmail username from env
+    password: ${SPRING_MAIL_PASSWORD}          # Gmail password or app password from env
     properties:
       mail:
         smtp:
@@ -19,5 +20,7 @@ spring:
 server:
   port: 8080
   servlet:
-    context-path: /api
+    context-path: /api                         # All backend APIs start with /api (e.g., /api/auth/login)
 
+frontend:
+  origin: ${FRONTEND_ORIGIN:http://localhost:3000}  # Dynamically read CORS origin from env, default to localhost

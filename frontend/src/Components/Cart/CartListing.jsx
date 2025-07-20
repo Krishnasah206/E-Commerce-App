@@ -33,11 +33,11 @@ function CartListing() {
       try {
         console.log("Fetching cart for user:", userId);
         console.log("Auth config:", config);
-        const res = await axios.get(`http://localhost:8080/api/cart/details/${userId}`, config);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/cart/details/${userId}`, config);
         console.log("Raw cart items:", res.data);
         const detailedItems = await Promise.all(
           res.data.map(async (item) => {
-            const productRes = await axios.get(`http://localhost:8080/api/products/${item.productId}`, config);
+            const productRes = await axios.get(`${import.meta.env.VITE_API_URL}/products/${item.productId}`, config);
             const product = productRes.data;
 
             const actualPrice = Math.round(product.mrp - (product.mrp * product.discount / 100));
@@ -64,7 +64,7 @@ function CartListing() {
 
   const handleRemove = async (productId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/cart/${userId}/remove/${productId}`, config);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/cart/${userId}/remove/${productId}`, config);
       setCartItems(prev => prev.filter(item => item.productId !== productId));
     } catch (err) {
       console.error("Error removing item:", err);

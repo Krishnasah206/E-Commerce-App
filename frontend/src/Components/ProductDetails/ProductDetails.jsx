@@ -23,13 +23,13 @@ function ProductDetails({ id }) {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/products/${id}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/products/${id}`)
       .then((res) => {
         setProduct(res.data);
         setMainImage(res.data.images?.[0]);
 
         // ✅ Fetch related products in same category
-        axios.get(`http://localhost:8080/api/products/category/${res.data.category}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/products/category/${res.data.category}`)
           .then((relatedRes) => {
             // Remove current product from related list
             const filtered = relatedRes.data.filter((p) => p.id !== res.data.id);
@@ -44,7 +44,7 @@ function ProductDetails({ id }) {
 
   useEffect(() => {
     if (product?.category) {
-      axios.get(`http://localhost:8080/api/products?category=${product.category}`)
+      axios.get(`${import.meta.env.VITE_API_URL}/products?category=${product.category}`)
         .then((res) => {
           const filtered = res.data.filter(p => p.id !== product.id);
           setRelatedProducts(filtered);
@@ -65,7 +65,7 @@ function ProductDetails({ id }) {
 
     try {
       await axios.post(
-        `http://localhost:8080/api/cart/${userId}/add`,
+        `${import.meta.env.VITE_API_URL}/cart/${userId}/add`,
         payload,
         {
           headers: {

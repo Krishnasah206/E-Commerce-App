@@ -14,7 +14,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173/")  // Update to your frontend URL if different
 public class AuthController {
 
     private final UserService userService;

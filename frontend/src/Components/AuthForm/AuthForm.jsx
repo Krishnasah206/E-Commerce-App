@@ -34,8 +34,8 @@ const AuthForm = ({ isLogin = true }) => {
     }
 
     const url = isLogin
-      ? "http://localhost:8080/api/auth/login"
-      : "http://localhost:8080/api/auth/register";
+      ? `${import.meta.env.VITE_API_URL}/auth/login`
+      : `${import.meta.env.VITE_API_URL}/auth/register`;
 
     const payload = isLogin
       ? {
