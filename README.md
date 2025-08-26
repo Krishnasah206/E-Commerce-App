@@ -1,7 +1,6 @@
-
 ## 🛍️ Trendify - E-Commerce Platform
 
-**Trendify** is a scalable and full-featured e-commerce web application built using **React.js (frontend)** and **Spring Boot + MongoDB (backend)**. It supports a rich shopping experience with features like user authentication, product listing, cart and order management, OTP-based verification, and a content-based **product recommendation system** powered by **machine learning** and integrated via **Apache Kafka**.
+**Trendify** is a scalable and full-featured e-commerce web application built using **React.js (frontend)** and **Spring Boot + MongoDB (backend)**. It supports a rich shopping experience with features like user authentication, product listing, cart and order management, OTP-based verification, and a content-based **product recommendation system** powered by **Python ML** and integrated via **Apache Kafka**.
 
 ---
 
@@ -19,13 +18,13 @@
 - MongoDB
 - Spring Security + JWT
 - Java Mail Sender (OTP)
-- Apache Kafka
+- Apache Kafka (Producer + Consumer)
 - ModelMapper
 
 ### 🤖 Machine Learning
 - Content-Based Product Recommendation System
-- Python (scikit-learn / pandas)
-- Kafka Producer to stream recommendations
+- Python (scikit-learn / pandas, FastAPI)
+- Kafka Integration (Spring Boot Producer → Python Recommender → Spring Boot Consumer)
 
 ---
 
@@ -40,7 +39,7 @@
 - List all products
 - Filter by Category, Subcategory
 - Product Details Page
-- Content-Based Recommendation Fetch
+- Triggers recommendation event when product is viewed
 
 ### 🛒 CartController.java
 - Add/Remove/Update products in user cart
@@ -55,6 +54,20 @@
 - Fetch latest blogs for homepage
 - CRUD for admin on blogs
 
+### 🔄 RecommendationController.java
+- API endpoint `/recommend/{productId}`
+- Publishes a **product view event** to Kafka
+- Returns an acknowledgement message
+
+### 📤 ProductViewProducer.java
+- Publishes `{userId, productId, timestamp}` to Kafka topic `product_views`
+
+### 📥 RecommendationConsumer.java
+- Listens to `product_views` topic
+- Calls **Python FastAPI recommender** (`/recommend/{productId}?top_n=6`)
+- Receives recommendations (only **IDs** of similar products)
+- Logs/stores them for retrieval in product detail page
+
 ---
 
 ## 🔐 Authentication Flow
@@ -68,31 +81,48 @@
 
 ## 🤝 Features
 
-- ✅ User authentication with OTP verification
-- ✅ Secure token-based session using JWT
-- ✅ Product CRUD and category-wise filtering
-- ✅ Shopping cart and checkout flow
-- ✅ Order placement and order history
-- ✅ Content-based ML recommendations
-- ✅ Real-time recommendations with Kafka
-- ✅ MongoDB as flexible NoSQL data store
+- ✅ User authentication with OTP verification  
+- ✅ Secure token-based session using JWT  
+- ✅ Product CRUD and category-wise filtering  
+- ✅ Shopping cart and checkout flow  
+- ✅ Order placement and order history  
+- ✅ **Asynchronous content-based ML recommendations (via Kafka + Python)**  
+- ✅ MongoDB as flexible NoSQL data store  
 
 ---
 
 ## 📦 ML Recommendation System (Python + Kafka)
 
-- Uses product description, category, and brand to find similar items.
-- Recommendation model runs in Python.
-- Apache Kafka used to stream recommendations into Spring Boot.
-- Recommendations shown dynamically on the product details page.
+- Uses product **title, description, category, and brand** to find similar items.  
+- Implemented in **Python (FastAPI)**.  
+- **Workflow**:  
+  1. When user views a product → Spring Boot publishes event to Kafka.  
+  2. Consumer listens → Calls FastAPI recommender with productId.  
+  3. FastAPI returns **list of recommended product IDs**.  
+  4. These IDs are stored/logged → fetched in product detail page for display.  
+
+Example Response from FastAPI:
+
+```json
+{
+  "recommendations": [
+    "685358076fbc0d31e1ca78a5",
+    "6853590d6fbc0d31e1ca78a7",
+    "685359926fbc0d31e1ca78a8",
+    "6852f847ef343f31db09e3c3",
+    "685358746fbc0d31e1ca78a6",
+    "685357796fbc0d31e1ca78a4"
+  ]
+}
+````
 
 ---
 
 ## 🧪 Sample Product Categories
 
-- Fashion → Men’s/Women’s/Kids’ Wear  
-- Electronics → Mobiles, Laptops, Smartwatches  
-- Footwear, Groceries, Bags, Beauty, Wellness, Jewellery
+* Fashion → Men’s/Women’s/Kids’ Wear
+* Electronics → Mobiles, Laptops, Smartwatches
+* Footwear, Groceries, Bags, Beauty, Wellness, Jewellery
 
 ---
 
@@ -103,9 +133,9 @@
 ```bash
 cd backend
 ./mvnw spring-boot:run
-````
+```
 
-Make sure `application.properties` is configured with:
+Make sure `application.yml` is configured with:
 
 * MongoDB URI
 * Mail credentials
@@ -125,7 +155,7 @@ Set API base URL inside Axios config or `.env` file.
 
 ## 🔒 Environment Variables
 
-For Spring Boot (`application.properties` or `application.yml`):
+For Spring Boot (`application.yml`):
 
 ```
 spring.data.mongodb.uri=
@@ -153,13 +183,16 @@ You can containerize the app using Docker and deploy to AWS:
 <img src='./assests/img1.png'>
 <img src='./assests/img2.png'>
 <img src='./assests/img3.png'>
+<img src='./assests/image.png'>
 <img src='./assests/img4.png'>
+
 ---
 
 ## 🧠 Future Enhancements
 
 * Razorpay/Stripe integration for payments
 * Admin dashboard for analytics
+* **Store recommendations in Redis for faster retrieval**
 * Collaborative filtering using user behavior
 * Notification system using WebSocket
 
@@ -174,5 +207,3 @@ This project is under the MIT License. Feel free to use and extend!
 ## 🙌 Credits
 
 Developed with ❤️ by Krishna Kumar Sah
-
-```
