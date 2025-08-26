@@ -2,38 +2,50 @@
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+frontend/.vite-cache/
+frontend/.DS_Store
+
+# Env (never commit real secrets)
 frontend/.env
 frontend/.env.local
-frontend/.DS_Store
+frontend/.env.*.local
+
+# Package manager lock files (optional: keep one if team prefers deterministic installs)
 frontend/yarn.lock
 frontend/package-lock.json
-
-# Vite cache
-frontend/.vite-cache/
 
 # Logs
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 
-# === Spring Boot ===
+
+# === Spring Boot (Java + Maven) ===
 backend/target/
 backend/.classpath
 backend/.project
 backend/.settings/
-backend/.env
 backend/.DS_Store
-backend/**/*.yml
 
+# Env (never commit real secrets)
+backend/.env
 
-# Maven
-backend/pom.xml.tag
-backend/pom.xml.releaseBackup
-backend/pom.xml.versionsBackup
+# Logs & temp
 backend/logs/
 backend/*.log
 
-# IntelliJ / Eclipse / VS Code
+# Maven backup files
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+
+# Do NOT ignore all .yml files!
+# application.yml and other configs should be tracked
+# If you want to keep local-only configs, name them application-local.yml and ignore:
+backend/src/main/resources/application-local.yml
+
+
+# === IDE / Editors ===
 .idea/
 *.iml
 *.ipr
@@ -41,19 +53,20 @@ backend/*.log
 .vscode/
 *.swp
 
+
 # === OS Files ===
 .DS_Store
 Thumbs.db
 
-# === Logs ===
+
+# === Global Logs / Temp ===
 *.log
 logs/
 *.bak
 *.tmp
 *.old
 
-# === Environment ===
+
+# === Environment (root-level) ===
 .env
-*.env.*
-.yml
-*.yml.*
+.env.*.local

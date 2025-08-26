@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import HomeSlider from '../Slider/HomeSlider';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import CatelogSlider from '../Slider/CatelogSlider';
 import { LiaShippingFastSolid } from "react-icons/lia";
 import AdsBannerSlider from '../Slider/AdsBannerSlider';
+
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';

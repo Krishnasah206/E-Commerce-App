@@ -12,10 +12,11 @@ import LoginPage from './pages/LoginPage';
 import AuthRegisterWithOtp from './pages/AuthRegisterWithOtp';
 import ResetPasswordFlow from './pages/ResetPasswordFlow';
 import Checkout from './pages/CheckOut';
-
 import OrderConfirmation from './pages/OrderConfirmation';
 
-
+// ✅ Toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -28,17 +29,16 @@ function App() {
         <Route path="/cartListing" element={<CartListing />} />
 
         <Route path="/login" element={<LoginPage />} />
-
         <Route path='/register' element={<AuthRegisterWithOtp />} />
         <Route path='/reset-password' element={<ResetPasswordFlow />} />
 
         <Route path="/checkout" element={<Checkout />} />
-
-        
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
-
       </Routes>
       <Footer />
+
+      {/* ✅ Global Toast Container (works across all pages) */}
+      <ToastContainer position="top-center" autoClose={3000} />
     </BrowserRouter>
   );
 }

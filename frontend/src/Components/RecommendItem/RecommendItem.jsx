@@ -1,80 +1,44 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Link } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
 import { FaShoppingCart, FaRegHeart } from 'react-icons/fa';
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { IoMdGitCompare } from "react-icons/io";
-import { Link } from 'react-router-dom';
-import '../ProductItem/ProductItem.css';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import '../ProductItem/ProductItem.css'; // Use same CSS
 
-function ProductItem({ product, token, cartOpen, setCartItems }) {
+function RecommendItem({ product }) {
   const [hovered, setHovered] = useState(false);
   const [adding, setAdding] = useState(false);
-  const [quantity] = useState(1);
   const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   if (!product) return null;
 
   const discountedPrice = product.mrp - (product.mrp * (product.discount / 100));
 
-  const fetchCartItems = async () => {
-    if (typeof setCartItems !== 'function') return;
-
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/cart/details/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
-        }
-      );
-      setCartItems(res.data);
-    } catch (err) {
-      console.error("Failed to fetch cart items", err);
-    }
-  };
-
-  
-
   const handleAddToCart = async () => {
     if (!userId || !token) {
-      toast.error("Please login to add items to your cart.", { position: "top-center" });
+      toast.error("Please login to add items to your cart.");
       return;
     }
-
-    const payload = {
-      productId: product.id,
-      quantity: quantity,
-    };
 
     setAdding(true);
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/cart/${userId}/add`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
+        { productId: product.id, quantity: 1 },
+        { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
       );
-
-      toast.success("Item added to cart successfully!", { position: "top-right" });
-
-      if (cartOpen && typeof setCartItems === 'function') {
-        await fetchCartItems();
-      }
-    } catch (error) {
-      console.error("Add to cart failed", error);
-      toast.error("Failed to add item. Please try again.", { position: "top-right" });
+      toast.success("Item added to cart!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to add item.");
     } finally {
       setAdding(false);
     }
   };
-
 
   return (
     <div
@@ -100,7 +64,7 @@ function ProductItem({ product, token, cartOpen, setCartItems }) {
       </div>
 
       {/* Image */}
-      <Link to={`/product/${String(product.id)}`}>
+      <Link to={`/product/${product.id}`}>
         <div className="imgWrapper w-full h-[220px] overflow-hidden relative cursor-pointer">
           <img
             src={product.images?.[0]}
@@ -117,23 +81,13 @@ function ProductItem({ product, token, cartOpen, setCartItems }) {
 
       {/* Info */}
       <div className="info p-4 bg-white">
-        <h6 className="text-[12px] font-medium text-gray-500 uppercase tracking-wide">
-          {product.brand}
-        </h6>
-        <h3 className="text-[14px] font-semibold text-gray-800 line-clamp-2 mt-1 mb-2">
-          {product.productName}
-        </h3>
+        <h6 className="text-[12px] font-medium text-gray-500 uppercase tracking-wide">{product.brand}</h6>
+        <h3 className="text-[14px] font-semibold text-gray-800 line-clamp-2 mt-1 mb-2">{product.productName}</h3>
         <Rating name="product-rating" value={product.rating || 0} size="small" readOnly />
-
         <div className="flex items-center gap-2 mt-2">
-          <span className="line-through text-gray-400 text-[14px]">
-            ₹{product.mrp.toFixed(2)}
-          </span>
-          <span className="text-[#ff5252] font-bold text-[15px]">
-            ₹{discountedPrice.toFixed(2)}
-          </span>
+          <span className="line-through text-gray-400 text-[14px]">₹{product.mrp.toFixed(2)}</span>
+          <span className="text-[#ff5252] font-bold text-[15px]">₹{discountedPrice.toFixed(2)}</span>
         </div>
-
         <button
           onClick={handleAddToCart}
           disabled={adding}
@@ -147,4 +101,4 @@ function ProductItem({ product, token, cartOpen, setCartItems }) {
   );
 }
 
-export default ProductItem;
+export default RecommendItem;

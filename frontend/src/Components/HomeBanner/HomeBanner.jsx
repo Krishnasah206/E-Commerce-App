@@ -22,15 +22,15 @@ export default function HomeBanner() {
     >
       {[
         {
-          img: 'https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg',
-          title: 'Women Solid Round Green T-Shirt',
-          price: '₹1,650.00',
+          img: 'banner2.jpg',
+          title: 'Apple iPhone 13 Pink 128GB',
+          price: '₹59,900.00',
         },
         {
-          img: 'https://serviceapi.spicezgold.com/download/1742441193376_1737037654953_New_Project_45.jpg',
-          title: 'Buy Modern Chair In Black Color',
-          price: '₹35,650.00',
-        },
+          img: 'banner2.jpg',
+          title: 'Latest iPhone with Dual Camera',
+          price: '₹64,900.00',
+        }
       ].map((slide, i) => (
         <SwiperSlide key={i}>
           <div className="item w-full relative rounded-md overflow-hidden">

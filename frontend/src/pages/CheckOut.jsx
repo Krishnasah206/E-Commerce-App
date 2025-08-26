@@ -119,7 +119,7 @@ const Checkout = () => {
               className="flex justify-between items-center border-b py-2 text-gray-600"
             >
               <span>{item.productName} × {item.quantity}</span>
-              <span>₹{item.price * item.quantity}</span>
+              <span>₹{(item.price * item.quantity).toFixed(2)}</span>
             </div>
           ))
         ) : (
@@ -127,7 +127,7 @@ const Checkout = () => {
         )}
 
         <div className="mt-4 text-right font-bold text-lg text-gray-800">
-          Total: ₹{totalAmount}
+          Total: ₹{totalAmount.toFixed(2)}
         </div>
 
         <div className="mt-4 flex items-center space-x-2">

@@ -40,15 +40,43 @@ public class OrderService {
         return orderRepository.findByUserId(userId);
     }
 
+//    private void sendOrderEmail(String email, Order order) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo(email); // ✅ Send to actual user email
+//        message.setSubject("Order Confirmation");
+//        message.setText("Your order has been placed successfully.\n\nOrder ID: " + order.getId() +
+//                "\nTotal Amount: ₹" + order.getTotalAmount() +
+//                "\n\nThank you for shopping with us!");
+//
+//        mailSender.send(message);
+//    }
+
     private void sendOrderEmail(String email, Order order) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email); // ✅ Send to actual user email
-        message.setSubject("Order Confirmation");
-        message.setText("Your order has been placed successfully.\n\nOrder ID: " + order.getId() +
-                "\nTotal Amount: ₹" + order.getTotalAmount() +
-                "\n\nThank you for shopping with us!");
+        message.setSubject("🛍️ Your Trendify Order Confirmation - #" + order.getId());
 
+        String emailText = "Hello,\n\n"
+                + "Thank you for shopping with Trendify! 🎉\n\n"
+                + "We’re excited to let you know that your order has been successfully placed and is now being processed.\n\n"
+                + "📦 Order Details:\n"
+                + "--------------------------------------------------\n"
+                + "Order ID: " + order.getId() + "\n"
+                + "Order Date: " + java.time.LocalDate.now() + "\n"
+                + "Total Amount: ₹" + order.getTotalAmount() + "\n"
+                + "Payment Status: Cash on Delivery\n"
+                + "--------------------------------------------------\n\n"
+                + "🛒 What happens next?\n"
+                + "- Our team is carefully packing your items.\n"
+                + "- You’ll receive another email with tracking details once your order is shipped.\n\n"
+                + "💡 Tip: You can track your order anytime by logging into your Trendify account.\n\n"
+                + "Thank you for choosing Trendify – where trends meet trust.\n\n"
+                + "Best Regards,\n"
+                + "The Trendify Team\n";
+
+        message.setText(emailText);
         mailSender.send(message);
     }
+
 
 }

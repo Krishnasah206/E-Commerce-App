@@ -1,32 +1,29 @@
-version: '3.9'
+version: "3.9"
 
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    container_name: ecommerce-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    env_file:
+      - ./backend/.env   # ✅ Load Atlas URI + other configs
     ports:
       - "8080:8080"
-    environment:
-      - SPRING_DATA_MONGODB_URI=${SPRING_DATA_MONGODB_URI}
-      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
-      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
-      - FRONTEND_ORIGIN=${FRONTEND_ORIGIN}  # Default to localhost if not set
-    depends_on:
-      - mongo
 
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}  # 👈 passed to frontend build
+    container_name: ecommerce-frontend
     ports:
-      - "3000:80"   # React served by Nginx on port 80
-    environment:
-      - REACT_APP_API_URL=${REACT_APP_API_URL}  # API URL for frontend to connect to backend
-
-  mongo:
-    image: mongo:6.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
+      - "5173:80"  # React build served by Nginx
+    depends_on:
+      - backend

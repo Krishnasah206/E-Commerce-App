@@ -1,15 +1,20 @@
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://Krishnasah2060:YZ1DSTFr8PXBYN@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-      database: ecommerce
+      uri: ${MONGODB_URI:mongodb+srv://Krishnasah2060:y4XNKel0T8zc51CM@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0}
+      database: ${MONGODB_DATABASE:ecommerce}
       auto-index-creation: true
 
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: krishnasah2060@gmail.com         # Gmail username from env
-    password: hwlknutilqbopg         # Gmail password or app password from env
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:krishnasah2060@gmail.com}
+    password: ${SPRING_MAIL_PASSWORD:hwlknutilqbopgns}
     properties:
       mail:
         smtp:
@@ -17,10 +22,26 @@ spring:
           starttls:
             enable: true
 
-server:
-  port: 8080
-  servlet:
-    context-path: /api                         # All backend APIs start with /api (e.g., /api/auth/login)
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:pkc-l7pr2.ap-south-1.aws.confluent.cloud:9092}
+    consumer:
+      group-id: recommendation-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: >
+        org.apache.kafka.common.security.plain.PlainLoginModule required
+        username="${KAFKA_API_KEY:V3QIID2X5ZDWSJXG}"
+        password="${KAFKA_API_SECRET:cfltnhsYk4VpSXlFJpGkQ3/KEoKCuGCF+0tOFKKyQTp6a0sldIvKQ76Uo6bmnYeg}";
 
 frontend:
-  origin: ${FRONTEND_ORIGIN:http://localhost:5173}  # Dynamically read CORS origin from env, default to localhost
+  origin: ${FRONTEND_ORIGIN:http://localhost:5173}
+
+
+
