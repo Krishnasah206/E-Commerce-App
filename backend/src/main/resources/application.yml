@@ -6,15 +6,15 @@ server:
 spring:
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb+srv://Krishnasah2060:y4XNKel0T8zc51CM@cluster0.gsivoy1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0}
+      uri: ${MONGODB_URI}
       database: ${MONGODB_DATABASE:ecommerce}
       auto-index-creation: true
 
   mail:
     host: ${SPRING_MAIL_HOST:smtp.gmail.com}
     port: ${SPRING_MAIL_PORT:587}
-    username: ${SPRING_MAIL_USERNAME:krishnasah2060@gmail.com}
-    password: ${SPRING_MAIL_PASSWORD:hwlknutilqbopgns}
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -23,7 +23,7 @@ spring:
             enable: true
 
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:pkc-l7pr2.ap-south-1.aws.confluent.cloud:9092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     consumer:
       group-id: recommendation-service
       auto-offset-reset: earliest
@@ -37,8 +37,8 @@ spring:
       sasl.mechanism: PLAIN
       sasl.jaas.config: >
         org.apache.kafka.common.security.plain.PlainLoginModule required
-        username="${KAFKA_API_KEY:V3QIID2X5ZDWSJXG}"
-        password="${KAFKA_API_SECRET:cfltnhsYk4VpSXlFJpGkQ3/KEoKCuGCF+0tOFKKyQTp6a0sldIvKQ76Uo6bmnYeg}";
+        username="${KAFKA_API_KEY}"
+        password="${KAFKA_API_SECRET}";
 
 frontend:
   origin: ${FRONTEND_ORIGIN:http://localhost:5173}
