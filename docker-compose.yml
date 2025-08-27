@@ -5,14 +5,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
     container_name: ecommerce-backend
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     env_file:
-      - ./backend/.env   # ✅ Load Atlas URI + other configs
+      - ./backend/.env
     ports:
       - "8080:8080"
 
@@ -21,9 +18,9 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}  # 👈 passed to frontend build
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}   # 👈 Use backend service name
     container_name: ecommerce-frontend
     ports:
-      - "5173:80"  # React build served by Nginx
+      - "5173:80"
     depends_on:
       - backend

@@ -2,6 +2,7 @@ package com.ecommerceApp.backend.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,14 +19,17 @@ public class RecommendationConsumer {
         this.restTemplate = builder.build();
     }
 
+    @Value("${app.recommender.url}")
+    private String recommenderBaseUrl;
+
     @KafkaListener(topics = "${app.kafka.topic.product-views:product_views}", groupId = "recommendation-service")
     public void listen(String message) {
         try {
             JsonNode node = mapper.readTree(message);
             String productId = node.get("productId").asText();
 
-            // Call Python recommender API
-            String recommenderUrl = "https://fastapi-recommendation-7d6c.onrender.com/recommend/" + productId + "?top_n=6";
+            String recommenderUrl = recommenderBaseUrl + "/recommend/" + productId + "?top_n=10";
+
             ResponseEntity<String> response = restTemplate.getForEntity(recommenderUrl, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -39,4 +43,5 @@ public class RecommendationConsumer {
             // Optional: implement retries or DLQ
         }
     }
+
 }

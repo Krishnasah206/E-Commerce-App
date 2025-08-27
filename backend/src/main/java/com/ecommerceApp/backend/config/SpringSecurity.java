@@ -30,6 +30,7 @@ public class SpringSecurity {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/products", "/products/**").permitAll()
+                        .requestMatchers("/recommend", "/recommend/**").permitAll()
                         .requestMatchers("/blogs", "/blogs/**").permitAll()
                         .requestMatchers("/cart/**").hasRole("USER")
                         .requestMatchers("/orders/**").hasRole("USER")

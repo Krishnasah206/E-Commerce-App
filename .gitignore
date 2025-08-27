@@ -42,7 +42,7 @@ backend/pom.xml.versionsBackup
 # Do NOT ignore all .yml files!
 # application.yml and other configs should be tracked
 # If you want to keep local-only configs, name them application-local.yml and ignore:
-backend/src/main/resources/application-local.yml
+backend/src/main/resources/application.yml
 
 
 # === IDE / Editors ===
